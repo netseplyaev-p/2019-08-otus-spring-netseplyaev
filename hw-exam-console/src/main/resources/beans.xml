@@ -4,7 +4,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="loadQuestionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
+    <bean id="questionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
         <property name="defaultFilePath" value="answers.csv"/>
     </bean>
 

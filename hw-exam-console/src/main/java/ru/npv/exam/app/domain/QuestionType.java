@@ -1,7 +1,7 @@
 package ru.npv.exam.app.domain;
 
 public enum QuestionType {
-    OPEN_ENDING,
-    CLOSE_ENDING,
+    OPEN_ENDED,
+    CLOSE_ENDED,
     YES_NO
 }
