@@ -40,7 +40,7 @@ public class StringPropertiesSinglePathService implements StringPropertiesServic
     }
 
     @Override
-    public String getStringProperty(String name) {
-        return cache.get(name);
+    public Optional<String> getStringProperty(String name) {
+        return Optional.ofNullable(cache.get(name));
     }
 }
