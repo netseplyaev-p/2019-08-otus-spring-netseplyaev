@@ -5,7 +5,15 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="questionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
-        <property name="defaultFilePath" value="answers.csv"/>
+        <constructor-arg name="parsers">
+            <list>
+                <bean class="ru.npv.exam.app.service.parsers.CloseEndedQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.parsers.OpenEndedQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.parsers.YesNoQuestionParser"/>
+            </list>
+        </constructor-arg>
+        <constructor-arg name="separator" value=","/>
+        <property name="filePath" value="/answers.csv"/>
     </bean>
 
     <bean id="settingsService" class="ru.npv.exam.app.service.impl.StringPropertiesSinglePathService">
