@@ -8,4 +8,7 @@
         <property name="defaultFilePath" value="answers.csv"/>
     </bean>
 
+    <bean id="settingsService" class="ru.npv.exam.app.service.impl.StringPropertiesSinglePathService">
+        <constructor-arg name="resourcePath" value="/settings.properties"/>
+    </bean>
 </beans>

@@ -1,5 +1,5 @@
 package ru.npv.exam.app.service;
 
-public interface GetStringPropertiesService {
+public interface StringPropertiesService {
     String getStringProperty(String name);
 }
