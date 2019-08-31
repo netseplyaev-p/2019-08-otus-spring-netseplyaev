@@ -1,6 +1,7 @@
 .idea
 *.iml
-targer
+target
+build
 out
 gradlew
 gradlew.*
