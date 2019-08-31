@@ -5,8 +5,9 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.npv.exam.app.service.StringPropertiesService;
+import ru.npv.exam.app.service.utils.FileResourceProcessor;
 
-import java.io.*;
+import java.io.Reader;
 import java.util.*;
 
 public class StringPropertiesSinglePathService implements StringPropertiesService {
@@ -30,19 +31,12 @@ public class StringPropertiesSinglePathService implements StringPropertiesServic
     }
 
     private void init() {
-        try(InputStream resourceStream = this.getClass().getResourceAsStream(resourcePath)) {
-            Properties properties = new Properties();
-            if (resourceStream != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(resourceStream));
-                properties.load(br);
-                cache.clear();
-                properties.entrySet().forEach(e -> cache.put((String) e.getKey(), (String) e.getValue()));
-            } else {
-                LOG.error("Ресурс не найден в Jar");
-            }
-        } catch (IOException e) {
-            LOG.error("Ошибка чтения ресурса", e);
-        }
+        Properties properties = new Properties();
+        new FileResourceProcessor(resourcePath, reader -> {
+            properties.load((Reader) reader);
+            cache.clear();
+            properties.entrySet().forEach(e -> cache.put((String) e.getKey(), (String) e.getValue()));
+        }).process();
     }
 
     @Override
