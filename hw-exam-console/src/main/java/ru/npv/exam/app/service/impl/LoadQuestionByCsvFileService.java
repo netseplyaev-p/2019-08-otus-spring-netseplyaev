@@ -10,7 +10,7 @@ import ru.npv.exam.app.domain.AbstractQuestion;
 import ru.npv.exam.app.domain.QuestionType;
 import ru.npv.exam.app.service.LoadQuestionsService;
 import ru.npv.exam.app.service.QuestionParser;
-import ru.npv.exam.app.service.utils.FileResourceProcessor;
+import ru.npv.exam.app.service.utils.JarResourceProcessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     @Override
     public List<AbstractQuestion> load(String resourcePath) {
         List<AbstractQuestion> questions = new LinkedList<>();
-        new FileResourceProcessor(resourcePath, reader -> applyConverters((BufferedReader) reader, questions)).process();
+        new JarResourceProcessor(resourcePath, reader -> applyConverters((BufferedReader) reader, questions)).process();
         return questions;
     }
 

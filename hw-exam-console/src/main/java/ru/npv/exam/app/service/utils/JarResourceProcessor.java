@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
-public class FileResourceProcessor {
-    private final Logger LOG = LoggerFactory.getLogger(FileResourceProcessor.class);
+public class JarResourceProcessor {
+    private final Logger LOG = LoggerFactory.getLogger(JarResourceProcessor.class);
 
     private final ThrowingConsumer<Reader, Exception> action;
     private final String resourcePath;
 
-    public FileResourceProcessor(String resourcePath, ThrowingConsumer action) {
+    public JarResourceProcessor(String resourcePath, ThrowingConsumer action) {
         this.action = action;
         this.resourcePath = resourcePath;
     }

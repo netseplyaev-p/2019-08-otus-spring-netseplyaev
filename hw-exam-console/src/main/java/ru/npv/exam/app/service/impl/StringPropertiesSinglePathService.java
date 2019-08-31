@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.npv.exam.app.service.StringPropertiesService;
-import ru.npv.exam.app.service.utils.FileResourceProcessor;
+import ru.npv.exam.app.service.utils.JarResourceProcessor;
 
 import java.io.Reader;
 import java.util.*;
@@ -32,7 +32,7 @@ public class StringPropertiesSinglePathService implements StringPropertiesServic
 
     private void init() {
         Properties properties = new Properties();
-        new FileResourceProcessor(resourcePath, reader -> {
+        new JarResourceProcessor(resourcePath, reader -> {
             properties.load((Reader) reader);
             cache.clear();
             properties.entrySet().forEach(e -> cache.put((String) e.getKey(), (String) e.getValue()));
