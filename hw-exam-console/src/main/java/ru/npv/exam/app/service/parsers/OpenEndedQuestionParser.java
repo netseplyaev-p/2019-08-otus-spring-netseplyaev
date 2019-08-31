@@ -1,10 +1,13 @@
 package ru.npv.exam.app.service.parsers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.npv.exam.app.domain.OpenEndingQuestion;
 import ru.npv.exam.app.domain.QuestionType;
 import ru.npv.exam.app.service.QuestionParser;
 
 public class OpenEndedQuestionParser implements QuestionParser<OpenEndingQuestion, String> {
+    private final Logger LOG = LoggerFactory.getLogger(OpenEndedQuestionParser.class);
 
     @Override
     public QuestionType getQuestionType() {
@@ -18,6 +21,7 @@ public class OpenEndedQuestionParser implements QuestionParser<OpenEndingQuestio
 
     @Override
     public OpenEndingQuestion parse(String input) {
+        LOG.debug("Попался открытый вопрос");
         return null;
     }
 }
