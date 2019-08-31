@@ -1,4 +1,4 @@
-package ru.npv.exam.app.service.checkers;
+package ru.npv.exam.app.service.impl.checkers;
 
 import ru.npv.exam.app.domain.CloseEndingQuestion;
 import ru.npv.exam.app.domain.QuestionType;

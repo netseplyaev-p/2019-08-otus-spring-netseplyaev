@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="questionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
         <constructor-arg name="parsers">
             <list>
-                <bean class="ru.npv.exam.app.service.parsers.CloseEndedQuestionParser"/>
-                <bean class="ru.npv.exam.app.service.parsers.OpenEndedQuestionParser"/>
-                <bean class="ru.npv.exam.app.service.parsers.YesNoQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.impl.parsers.CloseEndedQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.impl.parsers.OpenEndedQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.impl.parsers.YesNoQuestionParser"/>
             </list>
         </constructor-arg>
         <constructor-arg name="separator" value=","/>
@@ -19,4 +19,6 @@
     <bean id="settingsService" class="ru.npv.exam.app.service.impl.StringPropertiesSinglePathService">
         <constructor-arg name="resourcePath" value="/settings.properties"/>
     </bean>
+
+    <bean id="checkingService" class="ru.npv.exam.app.service.impl.CheckAnswerServiceImpl"/>
 </beans>

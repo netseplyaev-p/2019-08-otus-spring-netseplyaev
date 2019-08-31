@@ -1,4 +1,4 @@
-package ru.npv.exam.app.service.parsers;
+package ru.npv.exam.app.service.impl.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
