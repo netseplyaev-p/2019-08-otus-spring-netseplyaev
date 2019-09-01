@@ -4,21 +4,25 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+    <bean id="separator" class="java.lang.String">
+        <constructor-arg name="original" value=","/>
+    </bean>
+
     <bean id="questionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
         <constructor-arg name="parsers">
             <list>
                 <bean class="ru.npv.exam.app.service.impl.parsers.CloseEndedQuestionParser">
-                    <constructor-arg name="separator" value=","/>
+                    <constructor-arg name="separator" ref="separator"/>
                 </bean>
                 <bean class="ru.npv.exam.app.service.impl.parsers.OpenEndedQuestionParser">
-                    <constructor-arg name="separator" value=","/>
+                    <constructor-arg name="separator" ref="separator"/>
                 </bean>
                 <bean class="ru.npv.exam.app.service.impl.parsers.YesNoQuestionParser">
-                    <constructor-arg name="separator" value=","/>
+                    <constructor-arg name="separator" ref="separator"/>
                 </bean>
             </list>
         </constructor-arg>
-        <constructor-arg name="separator" value=","/>
+        <constructor-arg name="separator" ref="separator"/>
         <property name="filePath" value="/answers.csv"/>
     </bean>
 
@@ -26,5 +30,13 @@
         <constructor-arg name="resourcePath" value="/settings.properties"/>
     </bean>
 
-    <bean id="checkingService" class="ru.npv.exam.app.service.impl.CheckAnswerServiceImpl"/>
+    <bean id="checkingService" class="ru.npv.exam.app.service.impl.CheckAnswerServiceImpl">
+        <constructor-arg name="questionCheckers">
+            <list>
+                <bean class="ru.npv.exam.app.service.impl.checkers.CloseEndedQuestionChecker"/>
+                <bean class="ru.npv.exam.app.service.impl.checkers.OpenEndedQuestionChecker"/>
+                <bean class="ru.npv.exam.app.service.impl.checkers.YesNoQuestionChecker"/>
+            </list>
+        </constructor-arg>
+    </bean>
 </beans>
