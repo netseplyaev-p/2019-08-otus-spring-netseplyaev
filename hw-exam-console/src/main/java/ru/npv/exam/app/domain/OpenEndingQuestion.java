@@ -1,11 +1,14 @@
 package ru.npv.exam.app.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import ru.npv.exam.app.service.utils.QuestionUtils;
 
 import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class OpenEndingQuestion extends AbstractQuestion {
     private final List<String> rightVariants;
 
@@ -24,5 +27,8 @@ public class OpenEndingQuestion extends AbstractQuestion {
         return rightVariants;
     }
 
-
+    @Override
+    public String toString() {
+        return QuestionUtils.asString(this);
+    }
 }

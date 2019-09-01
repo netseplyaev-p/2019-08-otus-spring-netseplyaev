@@ -27,14 +27,13 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     private final String separator;
     private final List<String> availableQuestionTypes;
 
-    @Autowired
     public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers, String separator) {
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
         LOG.debug("Загрузка парсеров");
         parsers.forEach( p -> {
             parsersByQuestionType.put(p.getQuestionType(), p);
-            LOG.debug("Загружен парсер для {}, для вопроса: {}", p.getQuestionType(), p.getQuestionClass());
+            LOG.debug("Загружен парсер для {}, класс вопроса {}", p.getQuestionType(), p.getQuestionClass().getName());
         });
 
         availableQuestionTypes = new LinkedList<>();
@@ -65,7 +64,8 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
             String[] splitLine = line.split(separator);
             QuestionType questionType;
             if (splitLine.length > 0 && availableQuestionTypes.contains(splitLine[0].trim())
-                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null && parsersByQuestionType.containsKey(questionType)) {
+                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null   // Только чтоб получить значение
+                    && parsersByQuestionType.containsKey(questionType)) {
                 LOG.debug("Попытка распарсить {}", line);
                 AbstractQuestion q = parsersByQuestionType.get(questionType).parse(line);
                 questions.add(q);
