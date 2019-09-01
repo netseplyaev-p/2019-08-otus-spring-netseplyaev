@@ -25,6 +25,7 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     private final Map<QuestionType, QuestionParser<? extends AbstractQuestion, String>> parsersByQuestionType;
     private final String separator;
     private final List<String> availableQuestionTypes;
+    private List<AbstractQuestion> cache;
 
     public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers, String separator) {
         this.separator = separator;
@@ -39,6 +40,7 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
         for(QuestionType t: QuestionType.values()){
             availableQuestionTypes.add(String.valueOf(t));
         }
+        cache = new LinkedList<>();
     }
 
     @Override
@@ -48,6 +50,14 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
 
     @Override
     public List<AbstractQuestion> load(String resourcePath) {
+        if (!filePath.equals(resourcePath) || cache.isEmpty()) {
+            cache = Collections.unmodifiableList(loadFromResource(resourcePath));
+            filePath = resourcePath;
+        }
+        return cache;
+    }
+
+    private List<AbstractQuestion> loadFromResource(String resourcePath) {
         List<AbstractQuestion> questions = new LinkedList<>();
         new JarResourceProcessor(resourcePath, reader -> applyParsers((BufferedReader) reader, questions)).process();
         return questions;

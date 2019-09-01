@@ -39,4 +39,9 @@
             </list>
         </constructor-arg>
     </bean>
+
+    <bean id="requestService" class="ru.npv.exam.app.service.impl.SingleUserConsoleRequestService">
+        <constructor-arg name="propertiesService" ref="settingsService"/>
+        <constructor-arg name="questionsService" ref="questionService"/>
+    </bean>
 </beans>
