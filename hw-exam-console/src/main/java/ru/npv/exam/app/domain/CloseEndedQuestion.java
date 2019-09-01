@@ -1,18 +1,21 @@
 package ru.npv.exam.app.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.CollectionUtils;
 import ru.npv.exam.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.List;
 
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class CloseEndingQuestion extends AbstractQuestion {
+public class CloseEndedQuestion extends AbstractQuestion {
     private final String rightVariant;
     private final List<String> variants;
+
+    public CloseEndedQuestion(String text, String rightVariant, List<String> variants) {
+        super(text);
+        this.rightVariant = rightVariant;
+        this.variants = variants;
+    }
 
     @Override
     public QuestionType getType() {

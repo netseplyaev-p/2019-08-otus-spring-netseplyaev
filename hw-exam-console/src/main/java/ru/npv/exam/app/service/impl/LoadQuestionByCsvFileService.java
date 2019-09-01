@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.app.domain.AbstractQuestion;
 import ru.npv.exam.app.domain.QuestionType;
@@ -50,11 +49,11 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     @Override
     public List<AbstractQuestion> load(String resourcePath) {
         List<AbstractQuestion> questions = new LinkedList<>();
-        new JarResourceProcessor(resourcePath, reader -> applyConverters((BufferedReader) reader, questions)).process();
+        new JarResourceProcessor(resourcePath, reader -> applyParsers((BufferedReader) reader, questions)).process();
         return questions;
     }
 
-    private void applyConverters(BufferedReader reader, List<AbstractQuestion> questions) throws IOException {
+    private void applyParsers(BufferedReader reader, List<AbstractQuestion> questions) throws IOException {
         String line;
         while ((line = reader.readLine()) != null) {
             line = line.trim();

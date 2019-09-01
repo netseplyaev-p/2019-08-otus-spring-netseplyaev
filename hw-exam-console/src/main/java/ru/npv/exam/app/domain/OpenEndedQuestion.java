@@ -1,16 +1,19 @@
 package ru.npv.exam.app.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import ru.npv.exam.app.service.utils.QuestionUtils;
 
 import java.util.Collections;
 import java.util.List;
 
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class OpenEndingQuestion extends AbstractQuestion {
+public class OpenEndedQuestion extends AbstractQuestion {
     private final List<String> rightVariants;
+
+    public OpenEndedQuestion(String text, List<String> rightVariants) {
+        super(text);
+        this.rightVariants = rightVariants;
+    }
 
     @Override
     public QuestionType getType() {

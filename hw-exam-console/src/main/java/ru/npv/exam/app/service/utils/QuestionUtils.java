@@ -13,8 +13,9 @@ public class QuestionUtils {
             return "null";
         }
         StringBuilder sb = new StringBuilder(question.getType().getDefaultName())
-                .append(" вопрос: ")
-                .append(question.getText());
+                .append(" вопрос: [")
+                .append(question.getText())
+                .append("]");
         List<String> vars = question.getVariants();
         List<String> answs = question.getRightAnsvers();
         if (CollectionUtils.isEmpty(vars)) {
@@ -40,4 +41,14 @@ public class QuestionUtils {
         return sb.toString();
     }
 
+    public static String splitCommas(String in) {
+        String out = in.trim();
+        if (out.startsWith("\"") || out.startsWith("\'")) {
+            out = out.substring(1);
+        }
+        if (out.endsWith("\"") || out.endsWith("\'")) {
+            out = out.substring(0, out.length()-1);
+        }
+        return out;
+    }
 }

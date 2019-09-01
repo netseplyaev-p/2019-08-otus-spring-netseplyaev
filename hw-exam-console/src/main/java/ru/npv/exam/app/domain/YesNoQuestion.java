@@ -1,18 +1,23 @@
 package ru.npv.exam.app.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import ru.npv.exam.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-@AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class YesNoQuestion extends AbstractQuestion {
     private Map<String, String> variantsMapping;
-    private String rightVariant;    // Да - Y, Нет - N
+    private final String rightVariant;    // Да - Y, Нет - N
+
+    public YesNoQuestion(String text, Map<String, String> variantsMapping, String rightVariant) {
+        super(text);
+        this.variantsMapping = variantsMapping;
+        this.rightVariant = rightVariant;
+    }
 
     @Override
     public QuestionType getType() {
@@ -21,7 +26,9 @@ public class YesNoQuestion extends AbstractQuestion {
 
     @Override
     public List<String> getVariants() {
-        return (List<String>) variantsMapping.keySet();
+        List<String> vars = new LinkedList<>();
+        vars.addAll(variantsMapping.keySet());
+        return vars;
     }
 
     @Override

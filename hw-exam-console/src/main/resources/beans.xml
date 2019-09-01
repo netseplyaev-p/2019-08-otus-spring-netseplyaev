@@ -7,9 +7,15 @@
     <bean id="questionService" class="ru.npv.exam.app.service.impl.LoadQuestionByCsvFileService">
         <constructor-arg name="parsers">
             <list>
-                <bean class="ru.npv.exam.app.service.impl.parsers.CloseEndedQuestionParser"/>
-                <bean class="ru.npv.exam.app.service.impl.parsers.OpenEndedQuestionParser"/>
-                <bean class="ru.npv.exam.app.service.impl.parsers.YesNoQuestionParser"/>
+                <bean class="ru.npv.exam.app.service.impl.parsers.CloseEndedQuestionParser">
+                    <constructor-arg name="separator" value=","/>
+                </bean>
+                <bean class="ru.npv.exam.app.service.impl.parsers.OpenEndedQuestionParser">
+                    <constructor-arg name="separator" value=","/>
+                </bean>
+                <bean class="ru.npv.exam.app.service.impl.parsers.YesNoQuestionParser">
+                    <constructor-arg name="separator" value=","/>
+                </bean>
             </list>
         </constructor-arg>
         <constructor-arg name="separator" value=","/>

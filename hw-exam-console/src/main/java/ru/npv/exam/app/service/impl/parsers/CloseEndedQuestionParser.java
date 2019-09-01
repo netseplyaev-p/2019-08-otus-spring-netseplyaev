@@ -2,12 +2,21 @@ package ru.npv.exam.app.service.impl.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.npv.exam.app.domain.CloseEndingQuestion;
+import org.springframework.util.StringUtils;
+import ru.npv.exam.app.domain.CloseEndedQuestion;
 import ru.npv.exam.app.domain.QuestionType;
-import ru.npv.exam.app.service.QuestionParser;
+import ru.npv.exam.app.service.utils.QuestionUtils;
 
-public class CloseEndedQuestionParser implements QuestionParser<CloseEndingQuestion, String> {
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public class CloseEndedQuestionParser extends AbstractQuestionParser<CloseEndedQuestion, String> {
     private final Logger LOG = LoggerFactory.getLogger(CloseEndedQuestionParser.class);
+
+    public CloseEndedQuestionParser(String separator) {
+        super(separator);
+    }
 
     @Override
     public QuestionType getQuestionType() {
@@ -15,13 +24,22 @@ public class CloseEndedQuestionParser implements QuestionParser<CloseEndingQuest
     }
 
     @Override
-    public Class<CloseEndingQuestion> getQuestionClass() {
-        return CloseEndingQuestion.class;
+    public Class<CloseEndedQuestion> getQuestionClass() {
+        return CloseEndedQuestion.class;
     }
 
     @Override
-    public CloseEndingQuestion parse(String input) {
-        LOG.debug("Попался закрытый вопрос");
-        return null;
+    public CloseEndedQuestion parse(String input) {
+        if (StringUtils.isEmpty(input)) {
+            return null;
+        }
+        String[] parts = input.split(getSeparator());
+        List<String> variants = new LinkedList<>();
+        for (String variant: Arrays.copyOfRange(parts, 3, parts.length)) {
+            variants.add(QuestionUtils.splitCommas(variant));
+        }
+        CloseEndedQuestion question = new CloseEndedQuestion(QuestionUtils.splitCommas(parts[2]), parts[1].trim(), variants);
+        LOG.debug("Попался закрытый вопрос. На выходе - {}", question);
+        return question;
     }
 }
