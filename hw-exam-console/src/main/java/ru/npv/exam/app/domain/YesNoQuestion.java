@@ -1,6 +1,7 @@
 package ru.npv.exam.app.domain;
 
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import ru.npv.exam.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 @EqualsAndHashCode(callSuper = false)
 public class YesNoQuestion extends AbstractQuestion {
+    @Getter
     private Map<String, String> variantsMapping;
     private final String rightVariant;    // Да - Y, Нет - N
 

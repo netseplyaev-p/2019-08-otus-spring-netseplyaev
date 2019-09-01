@@ -37,7 +37,7 @@ public class OpenEndedQuestionParser extends AbstractQuestionParser<OpenEndedQue
         String[] parts = input.split(getSeparator());
         List<String> rightVariants = new LinkedList<>();
         for (String rightVariant: Arrays.copyOfRange(parts, 2, parts.length)) {
-            rightVariants.add(QuestionUtils.splitCommas(rightVariant));
+            rightVariants.add(QuestionUtils.splitCommas(rightVariant).toLowerCase());
         }
         OpenEndedQuestion question = new OpenEndedQuestion(QuestionUtils.splitCommas(parts[1]), rightVariants);
         LOG.debug("Попался открытый вопрос. На выходе - {}", question);

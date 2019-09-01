@@ -12,6 +12,12 @@ public class OpenEndedQuestionChecker implements QuestionChecker<OpenEndedQuesti
 
     @Override
     public boolean check(OpenEndedQuestion question, String answer) {
+        answer = answer.toLowerCase();
+        for (String rightAnsw: question.getRightAnsvers()) {
+            if (rightAnsw.equals(answer)) {
+                return true;
+            }
+        }
         return false;
     }
 }
