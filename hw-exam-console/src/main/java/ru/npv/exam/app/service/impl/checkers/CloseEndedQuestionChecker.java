@@ -1,17 +1,10 @@
 package ru.npv.exam.app.service.impl.checkers;
 
-import lombok.Getter;
 import ru.npv.exam.app.domain.CloseEndedQuestion;
 import ru.npv.exam.app.domain.QuestionType;
 import ru.npv.exam.app.service.QuestionChecker;
 
 public class CloseEndedQuestionChecker implements QuestionChecker<CloseEndedQuestion> {
-    @Getter
-    private final String delimiter;
-
-    public CloseEndedQuestionChecker(String delimiter) {
-        this.delimiter = delimiter;
-    }
 
     @Override
     public QuestionType getQuestionType() {

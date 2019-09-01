@@ -33,9 +33,7 @@
     <bean id="checkingService" class="ru.npv.exam.app.service.impl.CheckAnswerServiceImpl">
         <constructor-arg name="questionCheckers">
             <list>
-                <bean class="ru.npv.exam.app.service.impl.checkers.CloseEndedQuestionChecker">
-                    <constructor-arg name="delimiter" ref="separator"/>
-                </bean>
+                <bean class="ru.npv.exam.app.service.impl.checkers.CloseEndedQuestionChecker"/>
                 <bean class="ru.npv.exam.app.service.impl.checkers.OpenEndedQuestionChecker"/>
                 <bean class="ru.npv.exam.app.service.impl.checkers.YesNoQuestionChecker"/>
             </list>
