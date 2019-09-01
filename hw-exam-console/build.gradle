@@ -27,3 +27,7 @@ jar {
         attributes 'Main-Class': 'ru.npv.exam.app.Application'
     }
 }
+
+task runJar(dependsOn:jar) << {
+    javaexec { main="-jar"; args jar.archivePath }
+}

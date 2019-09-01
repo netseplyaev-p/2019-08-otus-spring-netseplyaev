@@ -3,4 +3,4 @@
 ***
 #### ДЗ 1 в /hw-exam-console/
 Сборка: gradle clean jar <br>
-Запук: java -jar build/libs/hw-exam-console-1.0-SNAPSHOT.jar
+Запуcк: gradle clean runJar
