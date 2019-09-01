@@ -4,4 +4,4 @@
 Перед запуском в консоли Windows: chcp 65001
 #### ДЗ 1 в /hw-exam-console/
 Сборка: gradle clean jar <br>
-Запуcк: gradle clean runJar
+Сборка и запуcк: gradle clean runJar
