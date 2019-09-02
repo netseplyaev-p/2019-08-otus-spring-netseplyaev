@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.npv.exam.app.service.ExamProcess;
 import ru.npv.exam.app.service.UserRequestService;
 import ru.npv.exam.app.service.impl.StringPropertiesSinglePathService;
 
@@ -20,6 +21,7 @@ public class Application {
     public void run() {
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
         UserRequestService<InputStream, OutputStream> requestService = context.getBean(UserRequestService.class);
-        requestService.init(System.in, System.out);
+        ExamProcess process = requestService.getExamProcess(System.in, System.out);
+        process.run();
     }
 }

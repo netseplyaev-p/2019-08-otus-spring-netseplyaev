@@ -43,5 +43,6 @@
     <bean id="requestService" class="ru.npv.exam.app.service.impl.SingleUserConsoleRequestService">
         <constructor-arg name="propertiesService" ref="settingsService"/>
         <constructor-arg name="questionsService" ref="questionService"/>
+        <constructor-arg name="checkAnswerService" ref="checkingService"/>
     </bean>
 </beans>
