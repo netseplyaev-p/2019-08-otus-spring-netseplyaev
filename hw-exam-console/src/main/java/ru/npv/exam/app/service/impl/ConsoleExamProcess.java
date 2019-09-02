@@ -1,6 +1,7 @@
 package ru.npv.exam.app.service.impl;
 
 import ru.npv.exam.app.domain.AbstractQuestion;
+import ru.npv.exam.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.app.service.CheckAnswerService;
 import ru.npv.exam.app.service.ExamProcess;
 
@@ -19,10 +20,10 @@ public class ConsoleExamProcess implements ExamProcess {
     private final OutputStream consoleOutput;
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
+    private final int MAX_ATTEMPTS = 5;     // Попытки корректного ввода
     private int maxQuestionsCount;
-    private int questionsCount;
-    private String helloMessage;
-    private String resultMessage;
+    private String customHelloMessage;
+    private String customResultMessage;
     private String trueMessage;
     private String falseMessage;
     private Boolean needResults;
@@ -50,28 +51,37 @@ public class ConsoleExamProcess implements ExamProcess {
     public void run() {
         initProcess();
         String userFullName = null;
-        String resultMessage = null;
+        int rightAnswers = 0;
+        int questionsCount = 0;
+        sayHello();
         try {
             userFullName = promptUserFullName();
-
-
-
-            sayGoodbye(resultMessage, userFullName);
+            for (questionsCount=1; questionsCount <= maxQuestionsCount; questionsCount++) {
+                rightAnswers += askQuestion(questionsCount) ? 1 : 0;
+            }
+            sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
             sayGoodbye("Вы прервали тест.", userFullName);
-        } catch (Exception e) {
+        } catch (QuestionsOverException e) {
+            sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
+        }
+        catch (Exception e) {
             sayGoodbye("В процессе выполнения произошла ошибка.", userFullName);
+        } finally {
+            finished = true;
         }
     }
 
     private void initProcess() {
-        questionsCount = 0;
+        if (finished) {
+            throw new ProcessAlreadyFinished("Процесс уже завершён.");
+        }
         maxQuestionsCount = 5;
         try {
             maxQuestionsCount = Integer.valueOf(parameters.get(PROPERTY_MAX_QUESTIONS));
         } catch (Exception e) {}
-        helloMessage = parameters.get(PROPERTY_BEGIN_MESSAGE);
-        resultMessage = parameters.get(PROPERTY_RESULT_MESSAGE);
+        customHelloMessage = parameters.get(PROPERTY_BEGIN_MESSAGE);
+        customResultMessage = parameters.get(PROPERTY_RESULT_MESSAGE);
         needResults = Boolean.FALSE;
         try {
             needResults = Boolean.valueOf(parameters.get(PROPERTY_ALL_CHECK_RESULTS));
@@ -92,10 +102,15 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String checkExitInput(String input) throws NeedExitException {
-        if (!isEmpty(input) && "EXIT".equals(input.trim().toUpperCase())) {
-            throw new NeedExitException("Пользователь ввёл exit");
+        if (!isEmpty(input) && "--exit".equals(input.trim().toLowerCase())) {
+            throw new NeedExitException("Пользователь ввёл --exit");
         }
         return input;
+    }
+
+    private void sayHello() {
+        processOutput.println(customHelloMessage);
+        processOutput.println("Для прерывания теста введите --exit вместо любого ответа.");
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
@@ -107,19 +122,46 @@ public class ConsoleExamProcess implements ExamProcess {
         processOutput.println("До свидания" + (isEmpty(fullName) ? "." : ", " + fullName));
     }
 
-    private void askQuestion() throws NeedExitException {
+    private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
+        AbstractQuestion question = nextQuestion();
+        processOutput.println(String.format("Вопрос %d: %s", questionsCount, question.getText()));
+        switch (question.getType()) {
+            case OPEN_ENDED:
 
+            case CLOSE_ENDED:
+            case YES_NO:
+                break;
+            default:
+        }
+        return false;
     }
 
-    private AbstractQuestion nextQuestion() {
+    private String promptWithAttempts() {
+        return "";
+    }
+
+    private AbstractQuestion nextQuestion() throws QuestionsOverException {
+        if (questionsSet.isEmpty()) {
+            throw new QuestionsOverException("Вопросы закончились.");
+        }
         int nextIndex = random.nextInt(questionsSet.size()-1);
         AbstractQuestion question = questionsSet.get(nextIndex);
         questionsSet.remove(nextIndex);
         return question;
     }
 
+    private String getResultMessage(int count, int rightAnswers) {
+        return "";
+    }
+
     class NeedExitException extends Exception {
         public NeedExitException(String message) {
+            super(message);
+        }
+    }
+
+    class QuestionsOverException extends Exception {
+        public QuestionsOverException(String message) {
             super(message);
         }
     }
