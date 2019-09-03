@@ -9,7 +9,6 @@ import ru.npv.exam.app.service.ExamProcess;
 import ru.npv.exam.app.service.utils.QuestionInputValidator;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ru.npv.exam.app.service.utils.Constants.*;
@@ -113,10 +112,7 @@ public class ConsoleExamProcess implements ExamProcess {
         trueMessage = parameters.get(PROPERTY_CHECK_TRUE);
         falseMessage = parameters.get(PROPERTY_CHECK_FALSE);
 
-        //BufferedReader br = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
-//        Locale loc = new Locale("ru");
         processInput = new Scanner(new InputStreamReader(consoleInput));
-//        processInput.useLocale(loc);
         if (consoleOutput instanceof PrintStream) {
             processOutput = (PrintStream) consoleOutput;
         } else {
@@ -132,6 +128,7 @@ public class ConsoleExamProcess implements ExamProcess {
         String firstName = promptWithoutValidation();
         processOutput.print("Ваше отчество: ");
         String middleName = promptWithoutValidation();
+        processOutput.println();
         return lastName + " " + firstName + (isEmpty(middleName) ? "" : " " + middleName);
     }
 
