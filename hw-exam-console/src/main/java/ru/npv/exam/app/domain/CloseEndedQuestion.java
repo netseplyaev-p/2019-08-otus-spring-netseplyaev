@@ -28,7 +28,7 @@ public class CloseEndedQuestion extends AbstractQuestion {
     }
 
     @Override
-    public List<String> getRightAnsvers() {
+    public List<String> getRightAnswers() {
         return Arrays.asList(rightVariant);
     }
 

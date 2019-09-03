@@ -17,7 +17,7 @@ public class QuestionUtils {
                 .append(question.getText())
                 .append("]");
         List<String> vars = question.getVariants();
-        List<String> answs = question.getRightAnsvers();
+        List<String> answs = question.getRightAnswers();
         if (CollectionUtils.isEmpty(vars)) {
             sb.append("[Нет вариантов]");
         } else {

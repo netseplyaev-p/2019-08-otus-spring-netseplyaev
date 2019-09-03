@@ -12,8 +12,8 @@ public class OpenEndedQuestionChecker implements QuestionChecker<OpenEndedQuesti
 
     @Override
     public boolean check(OpenEndedQuestion question, String answer) {
-        for (String rightAnsw: question.getRightAnsvers()) {
-            if (rightAnsw.equalsIgnoreCase(answer)) {
+        for (String rightAnsw: question.getRightAnswers()) {
+            if (rightAnsw.trim().equalsIgnoreCase(answer.trim())) {
                 return true;
             }
         }

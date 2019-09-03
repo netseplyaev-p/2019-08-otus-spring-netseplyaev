@@ -1,5 +1,7 @@
 package ru.npv.exam.app.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.npv.exam.app.domain.AbstractQuestion;
 import ru.npv.exam.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.app.service.CheckAnswerService;
@@ -15,6 +17,7 @@ import static ru.npv.exam.app.service.utils.Constants.*;
 import static org.springframework.util.StringUtils.isEmpty;
 
 public class ConsoleExamProcess implements ExamProcess {
+    private static final Logger LOG = LoggerFactory.getLogger(ConsoleExamProcess.class);
 
     private final CheckAnswerService checkAnswerService;
     private final InputStream consoleInput;
@@ -58,7 +61,7 @@ public class ConsoleExamProcess implements ExamProcess {
         sayHello();
         try {
             userFullName = promptUserFullName();
-            for (questionsCount=1; questionsCount <= maxQuestionsCount; questionsCount++) {
+            for (questionsCount=0; questionsCount < maxQuestionsCount; questionsCount++) {
                 boolean checkResult = askQuestion(questionsCount);
                 rightAnswers += checkResult ? 1 : 0;
                 if (needResults && checkResult) {
@@ -71,11 +74,14 @@ public class ConsoleExamProcess implements ExamProcess {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
             sayGoodbye("Вы прервали тест.", userFullName);
+            LOG.debug("", e);
         } catch (QuestionsOverException e) {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
+            LOG.debug("", e);
         }
         catch (Exception e) {
             sayGoodbye("В процессе выполнения произошла ошибка.", userFullName);
+            LOG.error("Ошибка выплонения", e);
         } finally {
             finished = true;
         }
@@ -142,16 +148,17 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
-        processOutput.println(String.format("Вопрос %d: %s", questionsCount, question.getText()));
-        processOutput.print("Ответ: ");
+        processOutput.println(String.format("Вопрос %d: %s", questionsCount+1, question.getText()));
         String answer;
         switch (question.getType()) {
             case OPEN_ENDED:
+                processOutput.print("Ответ: ");
                 answer = promptWithValidation(question);
                 return !isEmpty(answer) && checkAnswerService.check(question, answer);
             case CLOSE_ENDED:
             case YES_NO:
                 printVariants(question);
+                processOutput.print("Ответ: ");
                 answer = promptWithValidation(question);
                 return !isEmpty(answer) && checkAnswerService.check(question, answer);
             default:
@@ -165,7 +172,7 @@ public class ConsoleExamProcess implements ExamProcess {
             return;
         }
         for (int i=1; i <= variants.size(); i++) {
-            processOutput.println(String.format("%d. %s", i, variants.get(i)));
+            processOutput.println(String.format("%d. %s", i, variants.get(i-1)));
         }
     }
 
@@ -176,6 +183,7 @@ public class ConsoleExamProcess implements ExamProcess {
                 return input;
             } else {
                 processOutput.println("Введено некорректное значение. Осталось попыток: "+i);
+                processOutput.print("Ответ: ");
             }
         }
         return null;
@@ -185,19 +193,20 @@ public class ConsoleExamProcess implements ExamProcess {
         if (questionsSet.isEmpty()) {
             throw new QuestionsOverException("Вопросы закончились.");
         }
-        int nextIndex = random.nextInt(questionsSet.size()-1);
+        int nextIndex = random.nextInt(questionsSet.size());
         AbstractQuestion question = questionsSet.get(nextIndex);
         questionsSet.remove(nextIndex);
         return question;
     }
 
     private String getResultMessage(int count, int rightAnswers) {
-        int percent = Math.round(rightAnswers / count * 100);
+        int percent = (int)((double) rightAnswers / (double) count * 100);
+        LOG.debug("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
         String result = percent >= passingPercent ? "пройден" : "не пройден";
         if (!isEmpty(customResultMessage)) {
-            return String.format(customHelloMessage, count, rightAnswers, percent, result);
+            return String.format(customResultMessage, count, rightAnswers, percent, result);
         }
-        return String.format("Вопросов: %d. Верных ответов: %d (%d%). Тест %s.", count, rightAnswers, percent, result);
+        return String.format("Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.", count, rightAnswers, percent, result);
     }
 
     class NeedExitException extends Exception {

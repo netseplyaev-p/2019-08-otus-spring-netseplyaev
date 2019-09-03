@@ -13,10 +13,10 @@ public class YesNoQuestionChecker implements QuestionChecker<YesNoQuestion> {
 
     @Override
     public boolean check(YesNoQuestion question, String answer) {
-        if (question.getRightAnsvers().isEmpty()) {
+        if (question.getRightAnswers().isEmpty() || StringUtils.isEmpty(answer)) {
             return false;
         }
-        String varText = question.getVariantsMapping().get(answer);
-        return !StringUtils.isEmpty(varText) && question.getRightAnsvers().get(0).equals(varText);     // 1 верный ответ
+        String varText = question.getVariants().get(Integer.valueOf(answer)-1);
+        return question.getRightAnswers().get(0).equals(question.getVariantsMapping().get(varText));     // 1 верный ответ
     }
 }

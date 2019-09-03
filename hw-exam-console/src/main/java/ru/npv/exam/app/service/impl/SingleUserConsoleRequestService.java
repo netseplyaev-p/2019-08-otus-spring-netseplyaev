@@ -26,7 +26,7 @@ public class SingleUserConsoleRequestService implements UserRequestService<Input
 
     @Override
     public ExamProcess getExamProcess(InputStream input, OutputStream output) {
-        ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, questionsService.load());
+        ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, new LinkedList<>(questionsService.load()));
         Map<String, String> props = new HashMap<>();
         props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_MAX_QUESTIONS).orElse("5"));
         props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_PASSING_PERCENT).orElse("70"));

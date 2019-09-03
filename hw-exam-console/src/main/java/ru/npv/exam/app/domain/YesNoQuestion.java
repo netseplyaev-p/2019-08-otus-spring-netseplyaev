@@ -12,8 +12,8 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class YesNoQuestion extends AbstractQuestion {
     @Getter
-    private Map<String, String> variantsMapping;
-    private final String rightVariant;    // Да - Y, Нет - N
+    private Map<String, String> variantsMapping;    // Да - Y, Нет - N
+    private final String rightVariant;
 
     public YesNoQuestion(String text, Map<String, String> variantsMapping, String rightVariant) {
         super(text);
@@ -34,7 +34,7 @@ public class YesNoQuestion extends AbstractQuestion {
     }
 
     @Override
-    public List<String> getRightAnsvers() {
+    public List<String> getRightAnswers() {
         return Arrays.asList(rightVariant);
     }
 

@@ -26,7 +26,7 @@ public class OpenEndedQuestion extends AbstractQuestion {
     }
 
     @Override
-    public List<String> getRightAnsvers() {
+    public List<String> getRightAnswers() {
         return rightVariants;
     }
 
