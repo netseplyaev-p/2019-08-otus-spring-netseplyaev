@@ -28,6 +28,7 @@ public class ConsoleExamProcess implements ExamProcess {
     private String trueMessage;
     private String falseMessage;
     private Boolean needResults;
+    private Integer passingPercent;
 
     private Scanner processInput;
     private PrintStream processOutput;
@@ -88,12 +89,21 @@ public class ConsoleExamProcess implements ExamProcess {
         try {
             maxQuestionsCount = Integer.valueOf(parameters.get(PROPERTY_MAX_QUESTIONS));
         } catch (Exception e) {}
-        customHelloMessage = parameters.get(PROPERTY_BEGIN_MESSAGE);
-        customResultMessage = parameters.get(PROPERTY_RESULT_MESSAGE);
         needResults = false;
         try {
             needResults = Boolean.valueOf(parameters.get(PROPERTY_ALL_CHECK_RESULTS));
         } catch (Exception e) {}
+        passingPercent = 70;
+        try {
+            passingPercent = Integer.valueOf(parameters.get(PROPERTY_PASSING_PERCENT));
+            if (passingPercent > 100)
+                passingPercent = 100;
+            if (passingPercent < 1)
+                passingPercent = 1;
+        } catch (Exception e) {}
+        customHelloMessage = parameters.get(PROPERTY_BEGIN_MESSAGE);
+        customResultMessage = parameters.get(PROPERTY_RESULT_MESSAGE);
+
         trueMessage = parameters.get(PROPERTY_CHECK_TRUE);
         falseMessage = parameters.get(PROPERTY_CHECK_FALSE);
 
@@ -182,10 +192,12 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String getResultMessage(int count, int rightAnswers) {
+        int percent = Math.round(rightAnswers / count * 100);
+        String result = percent >= passingPercent ? "пройден" : "не пройден";
         if (!isEmpty(customResultMessage)) {
-            return String.format(customHelloMessage, count, rightAnswers);
+            return String.format(customHelloMessage, count, rightAnswers, percent, result);
         }
-        return String.format("Вопросов: %d. Верных ответов: %d. Тест %s", count, rightAnswers);
+        return String.format("Вопросов: %d. Верных ответов: %d (%d%). Тест %s.", count, rightAnswers, percent, result);
     }
 
     class NeedExitException extends Exception {
