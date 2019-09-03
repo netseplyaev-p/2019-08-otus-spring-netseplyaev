@@ -8,9 +8,7 @@ import ru.npv.exam.app.service.CheckAnswerService;
 import ru.npv.exam.app.service.ExamProcess;
 import ru.npv.exam.app.service.utils.QuestionInputValidator;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 
 import static ru.npv.exam.app.service.utils.Constants.*;
@@ -126,9 +124,11 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String checkExitInput(String input) throws NeedExitException {
+        LOG.debug("input from {}", input);
         if (!isEmpty(input) && "--exit".equals(input.trim().toLowerCase())) {
             throw new NeedExitException("Пользователь ввёл --exit");
         }
+        LOG.debug("input to {}", input);
         return input;
     }
 
@@ -151,19 +151,18 @@ public class ConsoleExamProcess implements ExamProcess {
         processOutput.println(String.format("Вопрос %d: %s", questionsCount+1, question.getText()));
         String answer;
         switch (question.getType()) {
-            case OPEN_ENDED:
-                processOutput.print("Ответ: ");
-                answer = promptWithValidation(question);
-                return !isEmpty(answer) && checkAnswerService.check(question, answer);
             case CLOSE_ENDED:
             case YES_NO:
                 printVariants(question);
-                processOutput.print("Ответ: ");
-                answer = promptWithValidation(question);
-                return !isEmpty(answer) && checkAnswerService.check(question, answer);
+            case OPEN_ENDED:
+                break;
             default:
                 throw new IllegalArgumentException("Тип вопроса не определён.");
         }
+        processOutput.print("Ответ: ");
+        answer = promptWithValidation(question);
+        LOG.debug("Вопрос:{} Тип:{} Ответ:{}", question.getText(), question.getType(), answer);
+        return !isEmpty(answer) && checkAnswerService.check(question, answer);
     }
 
     private void printVariants(AbstractQuestion question) {
