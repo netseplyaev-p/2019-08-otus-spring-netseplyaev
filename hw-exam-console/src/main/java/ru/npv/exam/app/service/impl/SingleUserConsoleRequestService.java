@@ -30,13 +30,13 @@ public class SingleUserConsoleRequestService implements UserRequestService<Input
         Map<String, String> props = new HashMap<>();
         props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_MAX_QUESTIONS).orElse("5"));
         props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_PASSING_PERCENT).orElse("70"));
-        props.put(PROPERTY_CHECK_TRUE, propertiesService.getStringProperty(PROPERTY_CHECK_TRUE).orElse("Р’РµСЂРЅРѕ"));
-        props.put(PROPERTY_CHECK_FALSE, propertiesService.getStringProperty(PROPERTY_CHECK_FALSE).orElse("РќРµРІРµСЂРЅРѕ"));
-        props.put(PROPERTY_BEGIN_MESSAGE, propertiesService.getStringProperty(PROPERTY_BEGIN_MESSAGE).orElse("РџСЂРёРІРµС‚СЃС‚РІСѓРµРј"));
-        props.put(PROPERTY_RESULT_MESSAGE, propertiesService.getStringProperty(PROPERTY_RESULT_MESSAGE).orElse("РР· %d РІРѕРїСЂРѕСЃРѕРІ РЅР° %d РѕС‚РІРµС‡РµРЅРѕ РІРµСЂРЅРѕ."));
+        props.put(PROPERTY_CHECK_TRUE, propertiesService.getStringProperty(PROPERTY_CHECK_TRUE).orElse("Верно"));
+        props.put(PROPERTY_CHECK_FALSE, propertiesService.getStringProperty(PROPERTY_CHECK_FALSE).orElse("Неверно"));
+        props.put(PROPERTY_BEGIN_MESSAGE, propertiesService.getStringProperty(PROPERTY_BEGIN_MESSAGE).orElse("Приветствуем"));
+        props.put(PROPERTY_RESULT_MESSAGE, propertiesService.getStringProperty(PROPERTY_RESULT_MESSAGE).orElse("Из %d вопросов на %d отвечено верно."));
         props.put(PROPERTY_ALL_CHECK_RESULTS, propertiesService.getStringProperty(PROPERTY_ALL_CHECK_RESULTS).orElse("false"));
         process.setParameters(props);
-        LOG.debug("РЎРѕР·РґР°РЅ РїСЂРѕС†РµСЃСЃ");
+        LOG.debug("Создан процесс");
         return process;
     }
 }

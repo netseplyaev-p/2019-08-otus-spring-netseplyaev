@@ -13,18 +13,18 @@ public class QuestionUtils {
             return "null";
         }
         StringBuilder sb = new StringBuilder(question.getType().getDefaultName())
-                .append(" РІРѕРїСЂРѕСЃ: [")
+                .append(" вопрос: [")
                 .append(question.getText())
                 .append("]");
         List<String> vars = question.getVariants();
         List<String> answs = question.getRightAnswers();
         if (CollectionUtils.isEmpty(vars)) {
-            sb.append("[РќРµС‚ РІР°СЂРёР°РЅС‚РѕРІ]");
+            sb.append("[Нет вариантов]");
         } else {
             if (QuestionType.YES_NO.equals(question.getType())) {
-                sb.append(" Р’Р°СЂРёР°РЅС‚С‹[Р”Р°, РќРµС‚]");
+                sb.append(" Варианты[Да, Нет]");
             } else {
-                sb.append(" Р’Р°СЂРёР°РЅС‚С‹[");
+                sb.append(" Варианты[");
                 for (int i = 0; i < vars.size(); i++) {
                     if (i > 0) {
                         sb.append(", ");
@@ -34,7 +34,7 @@ public class QuestionUtils {
                 sb.append("]");
             }
         }
-        sb.append(" Р’РµСЂРЅС‹Р№ РѕС‚РІРµС‚:");
+        sb.append(" Верный ответ:");
         for (String answ: answs) {
             sb.append(" [").append(answ).append("]");
         }

@@ -14,7 +14,7 @@ public class QuestionInputValidator {
             return validate((CloseEndedQuestion) question, input);
         if (question.getClass().equals(OpenEndedQuestion.class))
             return validate((OpenEndedQuestion) question, input);
-        throw new UnsupportedOperationException("РќРµРѕРїРѕР·РЅР°РЅРЅС‹Р№ С‚РёРї РІРѕРїСЂРѕСЃР°");
+        throw new UnsupportedOperationException("Неопознанный тип вопроса");
     }
 
     public static boolean validate(YesNoQuestion q, String input) {

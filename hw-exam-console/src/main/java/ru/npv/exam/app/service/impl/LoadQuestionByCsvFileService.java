@@ -30,10 +30,10 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers, String separator) {
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
-        LOG.debug("Р—Р°РіСЂСѓР·РєР° РїР°СЂСЃРµСЂРѕРІ");
+        LOG.debug("Загрузка парсеров");
         parsers.forEach( p -> {
             parsersByQuestionType.put(p.getQuestionType(), p);
-            LOG.debug("Р—Р°РіСЂСѓР¶РµРЅ РїР°СЂСЃРµСЂ РґР»СЏ {}, РєР»Р°СЃСЃ РІРѕРїСЂРѕСЃР° {}", p.getQuestionType(), p.getQuestionClass().getName());
+            LOG.debug("Загружен парсер для {}, класс вопроса {}", p.getQuestionType(), p.getQuestionClass().getName());
         });
 
         availableQuestionTypes = new LinkedList<>();
@@ -67,19 +67,19 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
         String line;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
-            if (StringUtils.isEmpty(line) || line.startsWith("#")) {    // РљРѕРјРјРµРЅС‚С‹ Рё РѕС‚СЃС‚СѓРїС‹ РїСЂРѕРїСѓСЃРєР°РµРј
+            if (StringUtils.isEmpty(line) || line.startsWith("#")) {    // Комменты и отступы пропускаем
                 continue;
             }
             String[] splitLine = line.split(separator);
             QuestionType questionType;
             if (splitLine.length > 0 && availableQuestionTypes.contains(splitLine[0].trim())
-                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null   // РўРѕР»СЊРєРѕ С‡С‚РѕР± РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ
+                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null   // Только чтоб получить значение
                     && parsersByQuestionType.containsKey(questionType)) {
-                LOG.debug("РџРѕРїС‹С‚РєР° СЂР°СЃРїР°СЂСЃРёС‚СЊ {}", line);
+                LOG.debug("Попытка распарсить {}", line);
                 AbstractQuestion q = parsersByQuestionType.get(questionType).parse(line);
                 questions.add(q);
             } else {
-                LOG.debug("РќРµСЂР°СЃРїРѕР·РЅР°РЅРЅР°СЏ СЃС‚СЂРѕРєР°: {}", line);
+                LOG.debug("Нераспознанная строка: {}", line);
             }
         }
     }

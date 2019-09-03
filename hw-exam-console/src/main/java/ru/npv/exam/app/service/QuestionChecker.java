@@ -5,5 +5,5 @@ import ru.npv.exam.app.domain.QuestionType;
 
 public interface QuestionChecker<T extends AbstractQuestion> {
     QuestionType getQuestionType();
-    boolean check(T question, String answer);      // answer: РџСЂРё РѕС‚РєСЂС‹С‚РѕРј РІРѕРїСЂРѕСЃРµ - РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РІРІРѕРґ, РїСЂРё РѕСЃС‚Р°Р»СЊРЅС‹С… - С‚РµРєСЃС‚ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РІР°СЂРёР°РЅС‚Р°.
+    boolean check(T question, String answer);      // answer: При открытом вопросе - пользовательский ввод, при остальных - текст выбранного варианта.
 }

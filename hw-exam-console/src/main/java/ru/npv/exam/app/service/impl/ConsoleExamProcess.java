@@ -9,6 +9,7 @@ import ru.npv.exam.app.service.ExamProcess;
 import ru.npv.exam.app.service.utils.QuestionInputValidator;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static ru.npv.exam.app.service.utils.Constants.*;
@@ -22,7 +23,7 @@ public class ConsoleExamProcess implements ExamProcess {
     private final OutputStream consoleOutput;
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
-    private final int MAX_ATTEMPTS = 5;     // РџРѕРїС‹С‚РєРё РІР°Р»РёРґРЅРѕРіРѕ РІРІРѕРґР°
+    private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
     private Integer maxQuestionsCount;
     private String customHelloMessage;
     private String customResultMessage;
@@ -72,15 +73,15 @@ public class ConsoleExamProcess implements ExamProcess {
             }
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
-            sayGoodbye("Р’С‹ РїСЂРµСЂРІР°Р»Рё С‚РµСЃС‚.", userFullName);
+            sayGoodbye("Вы прервали тест.", userFullName);
             LOG.debug("", e);
         } catch (QuestionsOverException e) {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
             LOG.debug("", e);
         }
         catch (Exception e) {
-            sayGoodbye("Р’ РїСЂРѕС†РµСЃСЃРµ РІС‹РїРѕР»РЅРµРЅРёСЏ РїСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР°.", userFullName);
-            LOG.error("РћС€РёР±РєР° РІС‹РїР»РѕРЅРµРЅРёСЏ", e);
+            sayGoodbye("В процессе выполнения произошла ошибка.", userFullName);
+            LOG.error("Ошибка выплонения", e);
         } finally {
             finished = true;
         }
@@ -88,7 +89,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private void initProcess() {
         if (finished) {
-            throw new ProcessAlreadyFinished("РџСЂРѕС†РµСЃСЃ СѓР¶Рµ Р·Р°РІРµСЂС€С‘РЅ.");
+            throw new ProcessAlreadyFinished("Процесс уже завершён.");
         }
         maxQuestionsCount = 6;
         try {
@@ -112,9 +113,10 @@ public class ConsoleExamProcess implements ExamProcess {
         trueMessage = parameters.get(PROPERTY_CHECK_TRUE);
         falseMessage = parameters.get(PROPERTY_CHECK_FALSE);
 
-        Locale loc = new Locale("ru");
-        processInput = new Scanner(consoleInput, "UTF-8");
-        processInput.useLocale(loc);
+        //BufferedReader br = new BufferedReader(new InputStreamReader(System.in, "UTF-8"));
+//        Locale loc = new Locale("ru");
+        processInput = new Scanner(new InputStreamReader(consoleInput));
+//        processInput.useLocale(loc);
         if (consoleOutput instanceof PrintStream) {
             processOutput = (PrintStream) consoleOutput;
         } else {
@@ -123,12 +125,12 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String promptUserFullName() throws NeedExitException {
-        processOutput.println("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїСЂРµРґСЃС‚Р°РІСЊС‚РµСЃСЊ.");
-        processOutput.print("Р’Р°С€Р° С„Р°РјРёР»РёСЏ: ");
+        processOutput.println("Пожалуйста, представьтесь.");
+        processOutput.print("Ваша фамилия: ");
         String lastName = promptWithoutValidation();
-        processOutput.print("Р’Р°С€Рµ РёРјСЏ: ");
+        processOutput.print("Ваше имя: ");
         String firstName = promptWithoutValidation();
-        processOutput.print("Р’Р°С€Рµ РѕС‚С‡РµСЃС‚РІРѕ: ");
+        processOutput.print("Ваше отчество: ");
         String middleName = promptWithoutValidation();
         return lastName + " " + firstName + (isEmpty(middleName) ? "" : " " + middleName);
     }
@@ -136,34 +138,34 @@ public class ConsoleExamProcess implements ExamProcess {
     private String checkExitInput(String input) throws NeedExitException {
         LOG.trace(">> input [{}]", input);
         if (!isEmpty(input) && "--exit".equals(input.trim().toLowerCase())) {
-            throw new NeedExitException("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІРІС‘Р» --exit");
+            throw new NeedExitException("Пользователь ввёл --exit");
         }
         return input;
     }
 
     private void helloMessage() {
         processOutput.println(customHelloMessage);
-        processOutput.println("Р”Р»СЏ РїСЂРµСЂС‹РІР°РЅРёСЏ С‚РµСЃС‚Р° РІРІРµРґРёС‚Рµ --exit РІРјРµСЃС‚Рѕ Р»СЋР±РѕРіРѕ РѕС‚РІРµС‚Р°.");
+        processOutput.println("Для прерывания теста введите --exit вместо любого ответа.");
     }
 
     private void greetingMessage(String fullName) {
         if (!isEmpty(fullName)) {
-            processOutput.println("Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, " + fullName + "! ");
+            processOutput.println("Добро пожаловать, " + fullName + "! ");
         }
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
         if (isEmpty(resultMessage)) {
-            processOutput.println("РўРµСЃС‚ РЅРµ РїРѕР№РґРµРЅ.");
+            processOutput.println("Тест не пойден.");
         } else {
             processOutput.println(resultMessage);
         }
-        processOutput.println("Р”Рѕ СЃРІРёРґР°РЅРёСЏ" + (isEmpty(fullName) ? "" : ", " + fullName) + "!\n");
+        processOutput.println("До свидания" + (isEmpty(fullName) ? "" : ", " + fullName) + "!\n");
     }
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
-        processOutput.println(String.format("Р’РѕРїСЂРѕСЃ %d: %s", questionsCount+1, question.getText()));
+        processOutput.println(String.format("Вопрос %d: %s", questionsCount+1, question.getText()));
         String answer;
         switch (question.getType()) {
             case CLOSE_ENDED:
@@ -172,11 +174,11 @@ public class ConsoleExamProcess implements ExamProcess {
             case OPEN_ENDED:
                 break;
             default:
-                throw new IllegalArgumentException("РўРёРї РІРѕРїСЂРѕСЃР° РЅРµ РѕРїСЂРµРґРµР»С‘РЅ.");
+                throw new IllegalArgumentException("Тип вопроса не определён.");
         }
-        processOutput.print("РћС‚РІРµС‚: ");
+        processOutput.print("Ответ: ");
         answer = promptWithValidation(question);
-        LOG.trace("Р’РѕРїСЂРѕСЃ:{} РўРёРї:{} РћС‚РІРµС‚:{}", question.getText(), question.getType(), answer);
+        LOG.trace("Вопрос:{} Тип:{} Ответ:{}", question.getText(), question.getType(), answer);
         return !isEmpty(answer) && checkAnswerService.check(question, answer);
     }
 
@@ -191,17 +193,21 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String promptWithoutValidation() throws NeedExitException {
-        return checkExitInput(processInput.nextLine()).trim();
+        String input = processInput.nextLine();
+        LOG.trace("raw input [{}]", input);
+        return checkExitInput(input).trim();
     }
 
     private <T extends AbstractQuestion> String promptWithValidation(T question) throws NeedExitException {
         for (int i = MAX_ATTEMPTS; i > 0; i--) {
-            String input = checkExitInput(processInput.nextLine()).trim();
+            String raw_input = processInput.nextLine();
+            LOG.trace("raw input [{}]", raw_input);
+            String input = checkExitInput(raw_input).trim();
             if (QuestionInputValidator.validate(question, input)) {
                 return input;
             } else {
-                processOutput.println("Р’РІРµРґРµРЅРѕ РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ. РћСЃС‚Р°Р»РѕСЃСЊ РїРѕРїС‹С‚РѕРє: "+i);
-                processOutput.print("РћС‚РІРµС‚: ");
+                processOutput.println("Введено некорректное значение. Осталось попыток: "+i);
+                processOutput.print("Ответ: ");
             }
         }
         return null;
@@ -209,7 +215,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private AbstractQuestion nextQuestion() throws QuestionsOverException {
         if (questionsSet.isEmpty()) {
-            throw new QuestionsOverException("Р’РѕРїСЂРѕСЃС‹ Р·Р°РєРѕРЅС‡РёР»РёСЃСЊ.");
+            throw new QuestionsOverException("Вопросы закончились.");
         }
         int nextIndex = random.nextInt(questionsSet.size());
         AbstractQuestion question = questionsSet.get(nextIndex);
@@ -220,11 +226,11 @@ public class ConsoleExamProcess implements ExamProcess {
     private String getResultMessage(int count, int rightAnswers) {
         int percent = (int)((double) rightAnswers / (double) count * 100);
         LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
-        String result = percent >= passingPercent ? "РїСЂРѕР№РґРµРЅ" : "РЅРµ РїСЂРѕР№РґРµРЅ";
+        String result = percent >= passingPercent ? "пройден" : "не пройден";
         if (!isEmpty(customResultMessage)) {
             return String.format(customResultMessage, count, rightAnswers, percent, result);
         }
-        return String.format("Р’РѕРїСЂРѕСЃРѕРІ: %d. Р’РµСЂРЅС‹С… РѕС‚РІРµС‚РѕРІ: %d (%d%%). РўРµСЃС‚ %s.", count, rightAnswers, percent, result);
+        return String.format("Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.", count, rightAnswers, percent, result);
     }
 
     class NeedExitException extends Exception {

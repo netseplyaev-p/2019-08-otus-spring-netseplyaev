@@ -18,7 +18,7 @@ public class CloseEndedQuestionChecker implements QuestionChecker<CloseEndedQues
         if (question.getRightAnswers().isEmpty()) {
             return false;
         }
-        int number = Integer.valueOf(question.getRightAnswers().get(0));        // 1 Ð²ÐµÑ€Ð½Ñ‹Ð¹ Ð¾Ñ‚Ð²ÐµÑ‚
+        int number = Integer.valueOf(question.getRightAnswers().get(0));        // 1 âåðíûé îòâåò
         int answ = Integer.valueOf(answer);
         return Objects.equals(number, answ);
     }

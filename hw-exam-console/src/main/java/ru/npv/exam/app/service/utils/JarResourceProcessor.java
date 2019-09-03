@@ -22,12 +22,12 @@ public class JarResourceProcessor {
                 Reader br = new BufferedReader(new InputStreamReader(resourceStream));
                 action.accept(br);
             } else {
-                LOG.error("Р РµСЃСѓСЂСЃ "+resourcePath+" РЅРµ РЅР°Р№РґРµРЅ РІ Jar");
+                LOG.error("Ресурс "+resourcePath+" не найден в Jar");
             }
         } catch (IOException e) {
-            LOG.error("РћС€РёР±РєР° С‡С‚РµРЅРёСЏ СЂРµСЃСѓСЂСЃР°: "+resourcePath, e);
+            LOG.error("Ошибка чтения ресурса: "+resourcePath, e);
         } catch (Exception e) {
-            LOG.error("РќРµРёР·РІРµСЃС‚РЅР°СЏ РѕС€РёР±РєР°", e);
+            LOG.error("Неизвестная ошибка", e);
         }
     }
 }
