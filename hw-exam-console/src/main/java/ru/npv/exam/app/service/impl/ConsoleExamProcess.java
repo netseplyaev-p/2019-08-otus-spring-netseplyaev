@@ -56,9 +56,10 @@ public class ConsoleExamProcess implements ExamProcess {
         String userFullName = null;
         int rightAnswers = 0;
         int questionsCount = 0;
-        sayHello();
+        helloMessage();
         try {
             userFullName = promptUserFullName();
+            greetingMessage(userFullName);
             for (questionsCount=0; questionsCount < maxQuestionsCount; questionsCount++) {
                 boolean checkResult = askQuestion(questionsCount);
                 rightAnswers += checkResult ? 1 : 0;
@@ -111,7 +112,9 @@ public class ConsoleExamProcess implements ExamProcess {
         trueMessage = parameters.get(PROPERTY_CHECK_TRUE);
         falseMessage = parameters.get(PROPERTY_CHECK_FALSE);
 
-        processInput = new Scanner(consoleInput);
+        Locale loc = new Locale("ru");
+        processInput = new Scanner(consoleInput, "UTF-8");
+        processInput.useLocale(loc);
         if (consoleOutput instanceof PrintStream) {
             processOutput = (PrintStream) consoleOutput;
         } else {
@@ -120,21 +123,33 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String promptUserFullName() throws NeedExitException {
-        return "Кремер Яков Иосифович";
+        processOutput.println("Пожалуйста, представьтесь.");
+        processOutput.print("Ваша фамилия: ");
+        String lastName = promptWithoutValidation();
+        processOutput.print("Ваше имя: ");
+        String firstName = promptWithoutValidation();
+        processOutput.print("Ваше отчество: ");
+        String middleName = promptWithoutValidation();
+        return lastName + " " + firstName + (isEmpty(middleName) ? "" : " " + middleName);
     }
 
     private String checkExitInput(String input) throws NeedExitException {
-        LOG.debug("input from {}", input);
+        LOG.trace(">> input [{}]", input);
         if (!isEmpty(input) && "--exit".equals(input.trim().toLowerCase())) {
             throw new NeedExitException("Пользователь ввёл --exit");
         }
-        LOG.debug("input to {}", input);
         return input;
     }
 
-    private void sayHello() {
+    private void helloMessage() {
         processOutput.println(customHelloMessage);
         processOutput.println("Для прерывания теста введите --exit вместо любого ответа.");
+    }
+
+    private void greetingMessage(String fullName) {
+        if (!isEmpty(fullName)) {
+            processOutput.println("Добро пожаловать, " + fullName + "! ");
+        }
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
@@ -143,7 +158,7 @@ public class ConsoleExamProcess implements ExamProcess {
         } else {
             processOutput.println(resultMessage);
         }
-        processOutput.println("До свидания" + (isEmpty(fullName) ? "." : ", " + fullName));
+        processOutput.println("До свидания" + (isEmpty(fullName) ? "" : ", " + fullName) + "!\n");
     }
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
@@ -161,7 +176,7 @@ public class ConsoleExamProcess implements ExamProcess {
         }
         processOutput.print("Ответ: ");
         answer = promptWithValidation(question);
-        LOG.debug("Вопрос:{} Тип:{} Ответ:{}", question.getText(), question.getType(), answer);
+        LOG.trace("Вопрос:{} Тип:{} Ответ:{}", question.getText(), question.getType(), answer);
         return !isEmpty(answer) && checkAnswerService.check(question, answer);
     }
 
@@ -173,6 +188,10 @@ public class ConsoleExamProcess implements ExamProcess {
         for (int i=1; i <= variants.size(); i++) {
             processOutput.println(String.format("%d. %s", i, variants.get(i-1)));
         }
+    }
+
+    private String promptWithoutValidation() throws NeedExitException {
+        return checkExitInput(processInput.nextLine()).trim();
     }
 
     private <T extends AbstractQuestion> String promptWithValidation(T question) throws NeedExitException {
@@ -200,7 +219,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private String getResultMessage(int count, int rightAnswers) {
         int percent = (int)((double) rightAnswers / (double) count * 100);
-        LOG.debug("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
+        LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
         String result = percent >= passingPercent ? "пройден" : "не пройден";
         if (!isEmpty(customResultMessage)) {
             return String.format(customResultMessage, count, rightAnswers, percent, result);
