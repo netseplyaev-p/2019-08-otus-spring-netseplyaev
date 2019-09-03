@@ -4,6 +4,7 @@ import ru.npv.exam.app.domain.AbstractQuestion;
 import ru.npv.exam.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.app.service.CheckAnswerService;
 import ru.npv.exam.app.service.ExamProcess;
+import ru.npv.exam.app.service.utils.QuestionInputValidator;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -136,8 +137,16 @@ public class ConsoleExamProcess implements ExamProcess {
         return false;
     }
 
-    private String promptWithAttempts() {
-        return "";
+    private <T extends AbstractQuestion> String promptWithValidation(T question) throws NeedExitException {
+        for (int i=MAX_ATTEMPTS; i > 0; i--) {
+            String input = checkExitInput(processInput.nextLine()).trim();
+            if (QuestionInputValidator.validate(question, input)) {
+                return input;
+            } else {
+                processOutput.println("Введено некорректное значение. Осталось попыток: "+i);
+            }
+        }
+        return null;
     }
 
     private AbstractQuestion nextQuestion() throws QuestionsOverException {
