@@ -21,8 +21,8 @@ public class ConsoleExamProcess implements ExamProcess {
     private final OutputStream consoleOutput;
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
-    private final int MAX_ATTEMPTS = 5;     // Попытки корректного ввода
-    private int maxQuestionsCount;
+    private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
+    private Integer maxQuestionsCount;
     private String customHelloMessage;
     private String customResultMessage;
     private String trueMessage;
@@ -58,7 +58,14 @@ public class ConsoleExamProcess implements ExamProcess {
         try {
             userFullName = promptUserFullName();
             for (questionsCount=1; questionsCount <= maxQuestionsCount; questionsCount++) {
-                rightAnswers += askQuestion(questionsCount) ? 1 : 0;
+                boolean checkResult = askQuestion(questionsCount);
+                rightAnswers += checkResult ? 1 : 0;
+                if (needResults && checkResult) {
+                    processOutput.println(trueMessage);
+                }
+                if (needResults && !checkResult) {
+                    processOutput.println(falseMessage);
+                }
             }
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
@@ -77,13 +84,13 @@ public class ConsoleExamProcess implements ExamProcess {
         if (finished) {
             throw new ProcessAlreadyFinished("Процесс уже завершён.");
         }
-        maxQuestionsCount = 5;
+        maxQuestionsCount = 6;
         try {
             maxQuestionsCount = Integer.valueOf(parameters.get(PROPERTY_MAX_QUESTIONS));
         } catch (Exception e) {}
         customHelloMessage = parameters.get(PROPERTY_BEGIN_MESSAGE);
         customResultMessage = parameters.get(PROPERTY_RESULT_MESSAGE);
-        needResults = Boolean.FALSE;
+        needResults = false;
         try {
             needResults = Boolean.valueOf(parameters.get(PROPERTY_ALL_CHECK_RESULTS));
         } catch (Exception e) {}
@@ -126,19 +133,34 @@ public class ConsoleExamProcess implements ExamProcess {
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
         processOutput.println(String.format("Вопрос %d: %s", questionsCount, question.getText()));
+        processOutput.print("Ответ: ");
+        String answer;
         switch (question.getType()) {
             case OPEN_ENDED:
-
+                answer = promptWithValidation(question);
+                return !isEmpty(answer) && checkAnswerService.check(question, answer);
             case CLOSE_ENDED:
             case YES_NO:
-                break;
+                printVariants(question);
+                answer = promptWithValidation(question);
+                return !isEmpty(answer) && checkAnswerService.check(question, answer);
             default:
+                throw new IllegalArgumentException("Тип вопроса не определён.");
         }
-        return false;
+    }
+
+    private void printVariants(AbstractQuestion question) {
+        List<String> variants = question.getVariants();
+        if (variants.isEmpty()) {
+            return;
+        }
+        for (int i=1; i <= variants.size(); i++) {
+            processOutput.println(String.format("%d. %s", i, variants.get(i)));
+        }
     }
 
     private <T extends AbstractQuestion> String promptWithValidation(T question) throws NeedExitException {
-        for (int i=MAX_ATTEMPTS; i > 0; i--) {
+        for (int i = MAX_ATTEMPTS; i > 0; i--) {
             String input = checkExitInput(processInput.nextLine()).trim();
             if (QuestionInputValidator.validate(question, input)) {
                 return input;
@@ -160,7 +182,10 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String getResultMessage(int count, int rightAnswers) {
-        return "";
+        if (!isEmpty(customResultMessage)) {
+            return String.format(customHelloMessage, count, rightAnswers);
+        }
+        return String.format("Вопросов: %d. Верных ответов: %d. Тест %s", count, rightAnswers);
     }
 
     class NeedExitException extends Exception {
