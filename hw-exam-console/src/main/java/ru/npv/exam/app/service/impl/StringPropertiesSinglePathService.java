@@ -2,8 +2,6 @@ package ru.npv.exam.app.service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.npv.exam.app.service.StringPropertiesService;
 import ru.npv.exam.app.service.utils.JarResourceProcessor;
 
@@ -11,7 +9,6 @@ import java.io.Reader;
 import java.util.*;
 
 public class StringPropertiesSinglePathService implements StringPropertiesService {
-    private final Logger LOG = LoggerFactory.getLogger(StringPropertiesSinglePathService.class);
 
     @Setter
     @Getter
