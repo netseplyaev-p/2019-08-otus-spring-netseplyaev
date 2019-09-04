@@ -8,6 +8,17 @@ import java.util.List;
 
 public class QuestionUtils {
 
+    public static String splitCommas(String in) {
+        String out = in.trim();
+        if (out.startsWith("\"") || out.startsWith("\'")) {
+            out = out.substring(1);
+        }
+        if (out.endsWith("\"") || out.endsWith("\'")) {
+            out = out.substring(0, out.length()-1);
+        }
+        return out;
+    }
+
     public static String asString(AbstractQuestion question) {
         if (question == null) {
             return "null";
@@ -39,16 +50,5 @@ public class QuestionUtils {
             sb.append(" [").append(answ).append("]");
         }
         return sb.toString();
-    }
-
-    public static String splitCommas(String in) {
-        String out = in.trim();
-        if (out.startsWith("\"") || out.startsWith("\'")) {
-            out = out.substring(1);
-        }
-        if (out.endsWith("\"") || out.endsWith("\'")) {
-            out = out.substring(0, out.length()-1);
-        }
-        return out;
     }
 }
