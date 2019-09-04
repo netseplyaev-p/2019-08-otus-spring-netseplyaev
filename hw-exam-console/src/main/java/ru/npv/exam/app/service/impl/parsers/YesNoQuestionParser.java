@@ -38,7 +38,7 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
         }
         String[] parts = input.split(getSeparator());
         YesNoQuestion question = new YesNoQuestion(QuestionUtils.splitCommas(parts[2]), defaultMapping, parts[1].trim());
-        LOG.debug("Попался вопрос Да/Нет. На выходе - {}", question);
+        LOG.trace("Попался вопрос Да/Нет. На выходе - {}", question);
         return question;
     }
 }
