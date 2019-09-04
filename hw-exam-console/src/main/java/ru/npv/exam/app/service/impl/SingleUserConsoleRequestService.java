@@ -29,7 +29,7 @@ public class SingleUserConsoleRequestService implements UserRequestService<Input
         ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, new LinkedList<>(questionsService.load()));
         Map<String, String> props = new HashMap<>();
         props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_MAX_QUESTIONS).orElse("5"));
-        props.put(PROPERTY_MAX_QUESTIONS, propertiesService.getStringProperty(PROPERTY_PASSING_PERCENT).orElse("70"));
+        props.put(PROPERTY_PASSING_PERCENT, propertiesService.getStringProperty(PROPERTY_PASSING_PERCENT).orElse("70"));
         props.put(PROPERTY_CHECK_TRUE, propertiesService.getStringProperty(PROPERTY_CHECK_TRUE).orElse("Верно"));
         props.put(PROPERTY_CHECK_FALSE, propertiesService.getStringProperty(PROPERTY_CHECK_FALSE).orElse("Неверно"));
         props.put(PROPERTY_BEGIN_MESSAGE, propertiesService.getStringProperty(PROPERTY_BEGIN_MESSAGE).orElse("Приветствуем"));
