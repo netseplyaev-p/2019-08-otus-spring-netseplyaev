@@ -69,6 +69,7 @@ public class ConsoleExamProcess implements ExamProcess {
                 if (needResults && !checkResult) {
                     processOutput.println(falseMessage);
                 }
+                processOutput.println();
             }
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
@@ -122,14 +123,14 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private String promptUserFullName() throws NeedExitException {
         processOutput.println("Пожалуйста, представьтесь.");
-        processOutput.print("Ваша фамилия: ");
-        String lastName = promptWithoutValidation();
         processOutput.print("Ваше имя: ");
         String firstName = promptWithoutValidation();
+        processOutput.print("Ваша фамилия: ");
+        String lastName = promptWithoutValidation();
         processOutput.print("Ваше отчество: ");
         String middleName = promptWithoutValidation();
         processOutput.println();
-        return lastName + " " + firstName + (isEmpty(middleName) ? "" : " " + middleName);
+        return (isEmpty(lastName) ? "" : lastName + " ") + (isEmpty(firstName) ? "" : firstName + " ") + (isEmpty(middleName) ? "" : middleName + " ");
     }
 
     private String checkExitInput(String input) throws NeedExitException {
@@ -146,9 +147,7 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private void greetingMessage(String fullName) {
-        if (!isEmpty(fullName)) {
-            processOutput.println("Добро пожаловать, " + fullName + "! ");
-        }
+        processOutput.println("Добро пожаловать" + (isEmpty(fullName) ? "" : ", "+fullName) + "! ");
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
