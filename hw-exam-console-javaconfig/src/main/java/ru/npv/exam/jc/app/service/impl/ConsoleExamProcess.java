@@ -41,58 +41,48 @@ public class ConsoleExamProcess implements ExamProcess {
     private Boolean needResults = false;
     @Value("${result.passing.percent}")
     private Integer passingPercent = 85;
-    @Value("exit.input")
+    @Value("${exit.input}")
     private String exitInput = "release me";
-    @Value("message.user.break")
+    @Value("${message.user.break}")
     private String messageUserBreak;
-    @Value("message.tech.error")
+    @Value("${message.tech.error}")
     private String messageTechError;
-    @Value("message.process.completed")
+    @Value("${message.process.completed}")
     private String messageProcessCompleted;
-    @Value("prompt.introduce")
+    @Value("${prompt.introduce}")
     private String introPrompt;
-    @Value("prompt.firstname")
+    @Value("${prompt.firstname}")
     private String promptName;
-    @Value("prompt.middlename")
+    @Value("${prompt.middlename}")
     private String promptMiddle;
-    @Value("prompt.lastname")
+    @Value("${prompt.lastname}")
     private String promptSurname;
-    @Value("error.user.exit")
+    @Value("${error.user.exit}")
     private String errorUserExit;
-    @Value("prompt.exit.message")
+    @Value("${prompt.exit.message}")
     private String exitPromptMessage;
-    @Value("message.greeting")
+    @Value("${message.greeting}")
     private String greetingMessage;
-    @Value("message.test.failed")
+    @Value("${message.test.failed}")
     private String testFailedMessage;
-    @Value("message.goodbye")
+    @Value("${message.goodbye}")
     private String goodbyeMessage;
-    @Value("template.question")
-    private String questionTemplate;
-    @Value("error.undefined.question.type")
+    @Value("${error.undefined.question.type}")
     private String errorUndefinedQuestion;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
-    //@Value("")
-//    private String string;
+    @Value("${template.question}")
+    private String questionTemplate = "Вопрос %d: %s";
+    @Value("${template.variant}")
+    private String variantTemplate = "%s (%d)";
+    @Value("${message.attempts}")
+    private String attemptsMessage;
+    @Value("${message.answer.title}")
+    private String answerTitle;
+    @Value("${error.questions.ends}")
+    private String errorQuestionsEnds;
+    @Value("${result.fail}")
+    private String resultFail="success";
+    @Value("${result.success}")
+    private String resultSuccess="fail";
 
     private Scanner processInput;
     private PrintStream processOutput;
@@ -216,7 +206,7 @@ public class ConsoleExamProcess implements ExamProcess {
             default:
                 throw new IllegalArgumentException(errorUndefinedQuestion);
         }
-        processOutput.print("Ответ: ");
+        processOutput.print(answerTitle+" ");
         answer = promptWithValidation(question);
         LOG.trace("Question:{} Type:{} Answer:{}", question.getText(), question.getType(), answer);
         return !isEmpty(answer) && checkAnswerService.check(question, answer);
@@ -228,7 +218,7 @@ public class ConsoleExamProcess implements ExamProcess {
             return;
         }
         for (int i = 1; i <= variants.size(); i++) {
-            processOutput.println(String.format("%d. %s", i, variants.get(i - 1)));
+            processOutput.println(String.format(variantTemplate, i, variants.get(i - 1)));
         }
     }
 
@@ -246,8 +236,8 @@ public class ConsoleExamProcess implements ExamProcess {
             if (QuestionInputValidator.validate(question, input)) {
                 return input;
             } else {
-                processOutput.println("Введено некорректное значение. Осталось попыток: " + i);
-                processOutput.print("Ответ: ");
+                processOutput.println(String.format(attemptsMessage, i));
+                processOutput.print(answerTitle+" ");
             }
         }
         return null;
@@ -255,7 +245,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private AbstractQuestion nextQuestion() throws QuestionsOverException {
         if (questionsSet.isEmpty()) {
-            throw new QuestionsOverException("Вопросы закончились.");
+            throw new QuestionsOverException(errorQuestionsEnds);
         }
         int nextIndex = random.nextInt(questionsSet.size());
         AbstractQuestion question = questionsSet.get(nextIndex);
@@ -266,7 +256,7 @@ public class ConsoleExamProcess implements ExamProcess {
     private String getResultMessage(int count, int rightAnswers) {
         int percent = (int) ((double) rightAnswers / (double) count * 100);
         LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
-        String result = percent >= passingPercent ? "пройден" : "не пройден";
+        String result = percent >= passingPercent ? resultSuccess : resultFail;
         return String.format(customResultMessage, count, rightAnswers, percent, result);
     }
 
