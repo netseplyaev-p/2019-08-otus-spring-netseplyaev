@@ -1,9 +1,11 @@
 package ru.npv.exam.jc.app.service.impl.checkers;
 
+import org.springframework.stereotype.Component;
 import ru.npv.exam.jc.app.domain.model.OpenEndedQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.app.QuestionChecker;
 
+@Component
 public class OpenEndedQuestionChecker implements QuestionChecker<OpenEndedQuestion> {
     @Override
     public QuestionType getQuestionType() {

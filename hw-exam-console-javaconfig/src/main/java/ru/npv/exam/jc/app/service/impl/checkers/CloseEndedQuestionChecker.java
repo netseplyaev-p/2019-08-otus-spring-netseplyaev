@@ -1,11 +1,13 @@
 package ru.npv.exam.jc.app.service.impl.checkers;
 
+import org.springframework.stereotype.Component;
 import ru.npv.exam.jc.app.domain.model.CloseEndedQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.app.QuestionChecker;
 
 import java.util.Objects;
 
+@Component
 public class CloseEndedQuestionChecker implements QuestionChecker<CloseEndedQuestion> {
 
     @Override

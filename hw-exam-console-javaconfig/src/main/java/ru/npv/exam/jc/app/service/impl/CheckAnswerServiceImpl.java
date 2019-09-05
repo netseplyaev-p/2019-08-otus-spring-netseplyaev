@@ -2,6 +2,7 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class CheckAnswerServiceImpl implements CheckAnswerService {
     private final Logger LOG = LoggerFactory.getLogger(CheckAnswerServiceImpl.class);
 

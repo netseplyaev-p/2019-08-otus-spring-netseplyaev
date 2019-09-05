@@ -2,12 +2,16 @@ package ru.npv.exam.jc.app.service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.npv.exam.jc.app.domain.app.StringPropertiesService;
 import ru.npv.exam.jc.app.domain.app.utils.JarResourceProcessor;
 
 import java.io.Reader;
 import java.util.*;
 
+@Service
 public class StringPropertiesSinglePathService implements StringPropertiesService {
 
     @Setter
@@ -21,7 +25,8 @@ public class StringPropertiesSinglePathService implements StringPropertiesServic
         cache = new HashMap<>();
     }
 
-    StringPropertiesSinglePathService(String resourcePath) {
+    @Autowired
+    StringPropertiesSinglePathService(@Value("settings.properties") String resourcePath) {
         this();
         this.resourcePath = resourcePath;
         init();

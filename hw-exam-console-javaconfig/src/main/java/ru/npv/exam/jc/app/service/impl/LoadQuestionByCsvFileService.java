@@ -1,9 +1,11 @@
 package ru.npv.exam.jc.app.service.impl;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
@@ -15,11 +17,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 
+@Service
 public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     private final Logger LOG = LoggerFactory.getLogger(LoadQuestionByCsvFileService.class);
 
     @Getter
-    @Setter
     private String filePath;
 
     private final Map<QuestionType, QuestionParser<? extends AbstractQuestion, String>> parsersByQuestionType;
@@ -27,7 +29,10 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     private final List<String> availableQuestionTypes;
     private List<AbstractQuestion> cache;
 
-    public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers, String separator) {
+    public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers,
+                                        @Value("${questions.path}") String filePath,
+                                        @Value("${parts.separator}") String separator) {
+        this.filePath = filePath;
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
         LOG.debug("Загрузка парсеров");

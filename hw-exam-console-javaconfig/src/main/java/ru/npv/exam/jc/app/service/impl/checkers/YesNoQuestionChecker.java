@@ -1,10 +1,12 @@
 package ru.npv.exam.jc.app.service.impl.checkers;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.model.YesNoQuestion;
 import ru.npv.exam.jc.app.domain.app.QuestionChecker;
 
+@Component
 public class YesNoQuestionChecker implements QuestionChecker<YesNoQuestion> {
     @Override
     public QuestionType getQuestionType() {
