@@ -6,3 +6,6 @@
 #### ДЗ 1 в \hw-exam-console\
 Сборка: gradle clean jar <br>
 Запуcк: java -jar build\libs\hw-exam-console-1.0-SNAPSHOT.jar
+#### ДЗ 1 в \hw-exam-console-javaconfig\
+Сборка: gradle clean jar <br>
+Запуcк: java -jar build\libs\hw-exam-console-javaconfig-1.0-SNAPSHOT.jar
