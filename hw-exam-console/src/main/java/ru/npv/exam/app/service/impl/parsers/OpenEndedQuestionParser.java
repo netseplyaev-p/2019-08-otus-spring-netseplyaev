@@ -1,0 +1,46 @@
+package ru.npv.exam.app.service.impl.parsers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+import ru.npv.exam.app.domain.OpenEndedQuestion;
+import ru.npv.exam.app.domain.QuestionType;
+import ru.npv.exam.app.service.utils.QuestionUtils;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public class OpenEndedQuestionParser extends AbstractQuestionParser<OpenEndedQuestion, String> {
+    private final Logger LOG = LoggerFactory.getLogger(OpenEndedQuestionParser.class);
+
+    public OpenEndedQuestionParser(String separator) {
+        super(separator);
+    }
+
+    @Override
+    public QuestionType getQuestionType() {
+        return QuestionType.OPEN_ENDED;
+    }
+
+    @Override
+    public Class<OpenEndedQuestion> getQuestionClass() {
+        return OpenEndedQuestion.class;
+    }
+
+    @Override
+    public OpenEndedQuestion parse(String input) {
+
+        if (StringUtils.isEmpty(input)) {
+            return null;
+        }
+        String[] parts = input.split(getSeparator());
+        List<String> rightVariants = new LinkedList<>();
+        for (String rightVariant: Arrays.copyOfRange(parts, 2, parts.length)) {
+            rightVariants.add(QuestionUtils.splitCommas(rightVariant));
+        }
+        OpenEndedQuestion question = new OpenEndedQuestion(QuestionUtils.splitCommas(parts[1]), rightVariants);
+        LOG.trace("Попался открытый вопрос. На выходе - {}", question);
+        return question;
+    }
+}

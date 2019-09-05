@@ -1,9 +1,9 @@
-package ru.npv.exam.jc.app.service.impl;
+package ru.npv.exam.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.npv.exam.jc.app.service.*;
-import ru.npv.exam.jc.app.service.utils.Constants;
+import ru.npv.exam.app.service.*;
+import ru.npv.exam.app.service.utils.Constants;
 
 import java.io.InputStream;
 import java.io.OutputStream;
