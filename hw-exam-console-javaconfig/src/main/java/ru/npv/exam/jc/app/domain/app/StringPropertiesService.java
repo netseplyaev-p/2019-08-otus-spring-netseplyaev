@@ -1,4 +1,4 @@
-package ru.npv.exam.jc.app.service;
+package ru.npv.exam.jc.app.domain.app;
 
 import java.util.Optional;
 

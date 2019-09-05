@@ -1,6 +1,6 @@
-package ru.npv.exam.jc.app.service;
+package ru.npv.exam.jc.app.domain.app;
 
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 
 public interface CheckAnswerService {
     boolean check(AbstractQuestion question, String input);

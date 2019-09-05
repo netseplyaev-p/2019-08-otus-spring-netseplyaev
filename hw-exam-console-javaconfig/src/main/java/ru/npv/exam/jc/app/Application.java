@@ -4,8 +4,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
-import ru.npv.exam.jc.app.service.ExamProcess;
-import ru.npv.exam.jc.app.service.UserRequestService;
+import ru.npv.exam.jc.app.domain.app.ExamProcess;
+import ru.npv.exam.jc.app.domain.app.UserRequestService;
 
 import java.io.InputStream;
 import java.io.OutputStream;

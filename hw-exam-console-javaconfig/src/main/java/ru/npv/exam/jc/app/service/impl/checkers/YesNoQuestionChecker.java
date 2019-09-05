@@ -1,9 +1,9 @@
 package ru.npv.exam.jc.app.service.impl.checkers;
 
 import org.springframework.util.StringUtils;
-import ru.npv.exam.jc.app.domain.QuestionType;
-import ru.npv.exam.jc.app.domain.YesNoQuestion;
-import ru.npv.exam.jc.app.service.QuestionChecker;
+import ru.npv.exam.jc.app.domain.model.QuestionType;
+import ru.npv.exam.jc.app.domain.model.YesNoQuestion;
+import ru.npv.exam.jc.app.domain.app.QuestionChecker;
 
 public class YesNoQuestionChecker implements QuestionChecker<YesNoQuestion> {
     @Override

@@ -1,9 +1,9 @@
-package ru.npv.exam.jc.app.service.utils;
+package ru.npv.exam.jc.app.domain.app.utils;
 
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
-import ru.npv.exam.jc.app.domain.CloseEndedQuestion;
-import ru.npv.exam.jc.app.domain.OpenEndedQuestion;
-import ru.npv.exam.jc.app.domain.YesNoQuestion;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.model.CloseEndedQuestion;
+import ru.npv.exam.jc.app.domain.model.OpenEndedQuestion;
+import ru.npv.exam.jc.app.domain.model.YesNoQuestion;
 
 public class QuestionInputValidator {
 

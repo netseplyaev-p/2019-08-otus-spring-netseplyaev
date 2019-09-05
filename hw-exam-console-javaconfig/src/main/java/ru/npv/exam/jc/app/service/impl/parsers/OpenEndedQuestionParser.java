@@ -3,9 +3,9 @@ package ru.npv.exam.jc.app.service.impl.parsers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import ru.npv.exam.jc.app.domain.OpenEndedQuestion;
-import ru.npv.exam.jc.app.domain.QuestionType;
-import ru.npv.exam.jc.app.service.utils.QuestionUtils;
+import ru.npv.exam.jc.app.domain.model.OpenEndedQuestion;
+import ru.npv.exam.jc.app.domain.model.QuestionType;
+import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;

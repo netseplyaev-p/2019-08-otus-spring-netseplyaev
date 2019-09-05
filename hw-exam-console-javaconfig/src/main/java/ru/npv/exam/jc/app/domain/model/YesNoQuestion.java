@@ -1,8 +1,8 @@
-package ru.npv.exam.jc.app.domain;
+package ru.npv.exam.jc.app.domain.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.npv.exam.jc.app.service.utils.QuestionUtils;
+import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;

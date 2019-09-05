@@ -5,11 +5,11 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
-import ru.npv.exam.jc.app.domain.QuestionType;
-import ru.npv.exam.jc.app.service.LoadQuestionsService;
-import ru.npv.exam.jc.app.service.QuestionParser;
-import ru.npv.exam.jc.app.service.utils.JarResourceProcessor;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.model.QuestionType;
+import ru.npv.exam.jc.app.domain.app.LoadQuestionsService;
+import ru.npv.exam.jc.app.domain.app.QuestionParser;
+import ru.npv.exam.jc.app.domain.app.utils.JarResourceProcessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

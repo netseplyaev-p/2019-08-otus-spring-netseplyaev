@@ -2,8 +2,8 @@ package ru.npv.exam.jc.app.service.impl.parsers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
-import ru.npv.exam.jc.app.service.QuestionParser;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.app.QuestionParser;
 
 @AllArgsConstructor
 public abstract class AbstractQuestionParser<T extends AbstractQuestion, V> implements QuestionParser<T, V> {

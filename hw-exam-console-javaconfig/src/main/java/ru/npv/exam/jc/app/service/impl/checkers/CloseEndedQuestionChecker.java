@@ -1,8 +1,8 @@
 package ru.npv.exam.jc.app.service.impl.checkers;
 
-import ru.npv.exam.jc.app.domain.CloseEndedQuestion;
-import ru.npv.exam.jc.app.domain.QuestionType;
-import ru.npv.exam.jc.app.service.QuestionChecker;
+import ru.npv.exam.jc.app.domain.model.CloseEndedQuestion;
+import ru.npv.exam.jc.app.domain.model.QuestionType;
+import ru.npv.exam.jc.app.domain.app.QuestionChecker;
 
 import java.util.Objects;
 

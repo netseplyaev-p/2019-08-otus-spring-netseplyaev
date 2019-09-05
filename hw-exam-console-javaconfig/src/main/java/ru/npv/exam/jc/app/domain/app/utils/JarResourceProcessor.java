@@ -1,4 +1,4 @@
-package ru.npv.exam.jc.app.service.utils;
+package ru.npv.exam.jc.app.domain.app.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

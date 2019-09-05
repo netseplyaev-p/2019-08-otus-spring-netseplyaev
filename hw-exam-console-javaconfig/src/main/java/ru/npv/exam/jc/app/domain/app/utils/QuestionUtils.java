@@ -1,8 +1,8 @@
-package ru.npv.exam.jc.app.service.utils;
+package ru.npv.exam.jc.app.domain.app.utils;
 
 import org.springframework.util.CollectionUtils;
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
-import ru.npv.exam.jc.app.domain.QuestionType;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.model.QuestionType;
 
 import java.util.List;
 

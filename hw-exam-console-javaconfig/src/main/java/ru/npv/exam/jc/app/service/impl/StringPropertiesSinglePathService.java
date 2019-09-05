@@ -2,8 +2,8 @@ package ru.npv.exam.jc.app.service.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.npv.exam.jc.app.service.StringPropertiesService;
-import ru.npv.exam.jc.app.service.utils.JarResourceProcessor;
+import ru.npv.exam.jc.app.domain.app.StringPropertiesService;
+import ru.npv.exam.jc.app.domain.app.utils.JarResourceProcessor;
 
 import java.io.Reader;
 import java.util.*;

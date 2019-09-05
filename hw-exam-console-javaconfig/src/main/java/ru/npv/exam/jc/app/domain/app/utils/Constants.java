@@ -1,4 +1,4 @@
-package ru.npv.exam.jc.app.service.utils;
+package ru.npv.exam.jc.app.domain.app.utils;
 
 public class Constants {
     public static final String PROPERTY_MAX_QUESTIONS = "max.questions";

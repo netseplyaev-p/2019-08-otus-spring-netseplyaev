@@ -2,12 +2,12 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.npv.exam.jc.app.domain.AbstractQuestion;
-import ru.npv.exam.jc.app.exception.ProcessAlreadyFinished;
-import ru.npv.exam.jc.app.service.CheckAnswerService;
-import ru.npv.exam.jc.app.service.ExamProcess;
-import ru.npv.exam.jc.app.service.utils.QuestionInputValidator;
-import ru.npv.exam.jc.app.service.utils.Constants;
+import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
+import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
+import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
+import ru.npv.exam.jc.app.domain.app.ExamProcess;
+import ru.npv.exam.jc.app.domain.app.utils.QuestionInputValidator;
+import ru.npv.exam.jc.app.domain.app.utils.Constants;
 
 import java.io.*;
 import java.util.*;
