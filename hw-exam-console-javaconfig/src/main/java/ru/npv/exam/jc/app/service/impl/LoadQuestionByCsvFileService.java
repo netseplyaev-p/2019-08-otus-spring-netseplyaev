@@ -21,8 +21,7 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     private final Logger LOG = LoggerFactory.getLogger(LoadQuestionByCsvFileService.class);
 
     @Getter
-    private String filePath;
-
+    private final String defaultPath;
     private final Map<QuestionType, QuestionParser<? extends AbstractQuestion, String>> parsersByQuestionType;
     private final String separator;
     private final List<String> availableQuestionTypes;
@@ -31,7 +30,7 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     public LoadQuestionByCsvFileService(List<QuestionParser<? extends AbstractQuestion, String>> parsers,
                                         @Value("${questions.path}") String filePath,
                                         @Value("${parts.separator}") String separator) {
-        this.filePath = filePath;
+        this.defaultPath = filePath;
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
         LOG.debug("Загрузка парсеров");
@@ -48,15 +47,9 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
     }
 
     @Override
-    public String getDefaultPath() {
-        return filePath;
-    }
-
-    @Override
     public List<AbstractQuestion> load(String resourcePath) {
-        if (!filePath.equals(resourcePath) || cache.isEmpty()) {
+        if (!defaultPath.equals(resourcePath) || cache.isEmpty()) {
             cache = Collections.unmodifiableList(loadFromResource(resourcePath));
-            filePath = resourcePath;
         }
         return cache;
     }

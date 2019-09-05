@@ -8,7 +8,6 @@ import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
 import ru.npv.exam.jc.app.domain.app.ExamProcess;
 import ru.npv.exam.jc.app.domain.app.utils.QuestionInputValidator;
-import ru.npv.exam.jc.app.domain.app.utils.Constants;
 
 import java.io.*;
 import java.util.*;
@@ -31,7 +30,7 @@ public class ConsoleExamProcess implements ExamProcess {
     @Value("${begin.message}")
     private String customHelloMessage;
     @Value("${result.message}")
-    private String customResultMessage;
+    private String customResultMessage = "Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.";
     @Value("${check.answer.true}")
     private String trueMessage = "Верно";
     @Value("${check.answer.false}")
@@ -138,7 +137,7 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private void greetingMessage(String fullName) {
-        processOutput.println("Добро пожаловать" + (isEmpty(fullName) ? "" : ", " + fullName) + "! ");
+        processOutput.println(String.format("Добро пожаловать%s! ", (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
@@ -147,7 +146,7 @@ public class ConsoleExamProcess implements ExamProcess {
         } else {
             processOutput.println(resultMessage);
         }
-        processOutput.println("До свидания" + (isEmpty(fullName) ? "" : ", " + fullName) + "!\n");
+        processOutput.println(String.format("До свидания%s!\n", (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
@@ -165,7 +164,7 @@ public class ConsoleExamProcess implements ExamProcess {
         }
         processOutput.print("Ответ: ");
         answer = promptWithValidation(question);
-        LOG.trace("Вопрос:{} Тип:{} Ответ:{}", question.getText(), question.getType(), answer);
+        LOG.trace("Question:{} Type:{} Answer:{}", question.getText(), question.getType(), answer);
         return !isEmpty(answer) && checkAnswerService.check(question, answer);
     }
 
@@ -214,10 +213,7 @@ public class ConsoleExamProcess implements ExamProcess {
         int percent = (int) ((double) rightAnswers / (double) count * 100);
         LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
         String result = percent >= passingPercent ? "пройден" : "не пройден";
-        if (!isEmpty(customResultMessage)) {
-            return String.format(customResultMessage, count, rightAnswers, percent, result);
-        }
-        return String.format("Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.", count, rightAnswers, percent, result);
+        return String.format(customResultMessage, count, rightAnswers, percent, result);
     }
 
     class NeedExitException extends Exception {
