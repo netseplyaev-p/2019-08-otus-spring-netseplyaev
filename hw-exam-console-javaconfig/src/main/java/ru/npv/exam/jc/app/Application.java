@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 @ComponentScan(basePackages = "ru.npv.exam.jc.app.service")
-@PropertySource(value = "classpath:settings.properties")
+@PropertySource(value = "/settings.properties")
 public class Application {
 
     public static void main(String[] args) {

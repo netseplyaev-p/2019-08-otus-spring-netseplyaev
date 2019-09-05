@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
+import static ru.npv.exam.jc.app.domain.app.utils.Constants.PROPERTY_MAX_QUESTIONS;
 
 public class ConsoleExamProcess implements ExamProcess {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleExamProcess.class);
@@ -24,9 +25,10 @@ public class ConsoleExamProcess implements ExamProcess {
     private final Random random = new Random(System.currentTimeMillis());
     private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
 
-    @Value("${max.questions}")
+    @Value("${"+PROPERTY_MAX_QUESTIONS+"}")
     private Integer maxQuestionsCount = 6;
 
+    //TODO: вынести всё в props
     @Value("${begin.message}")
     private String customHelloMessage;
     @Value("${result.message}")
@@ -39,6 +41,58 @@ public class ConsoleExamProcess implements ExamProcess {
     private Boolean needResults = false;
     @Value("${result.passing.percent}")
     private Integer passingPercent = 85;
+    @Value("exit.input")
+    private String exitInput = "release me";
+    @Value("message.user.break")
+    private String messageUserBreak;
+    @Value("message.tech.error")
+    private String messageTechError;
+    @Value("message.process.completed")
+    private String messageProcessCompleted;
+    @Value("prompt.introduce")
+    private String introPrompt;
+    @Value("prompt.firstname")
+    private String promptName;
+    @Value("prompt.middlename")
+    private String promptMiddle;
+    @Value("prompt.lastname")
+    private String promptSurname;
+    @Value("error.user.exit")
+    private String errorUserExit;
+    @Value("prompt.exit.message")
+    private String exitPromptMessage;
+    @Value("message.greeting")
+    private String greetingMessage;
+    @Value("message.test.failed")
+    private String testFailedMessage;
+    @Value("message.goodbye")
+    private String goodbyeMessage;
+    @Value("template.question")
+    private String questionTemplate;
+    @Value("error.undefined.question.type")
+    private String errorUndefinedQuestion;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
+    //@Value("")
+//    private String string;
 
     private Scanner processInput;
     private PrintStream processOutput;
@@ -82,14 +136,14 @@ public class ConsoleExamProcess implements ExamProcess {
             }
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
-            sayGoodbye("Вы прервали тест.", userFullName);
+            sayGoodbye(messageUserBreak, userFullName);
             LOG.debug("", e);
         } catch (QuestionsOverException e) {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
             LOG.debug("", e);
         } catch (Exception e) {
-            sayGoodbye("В процессе выполнения произошла ошибка.", userFullName);
-            LOG.error("Ошибка выплонения", e);
+            sayGoodbye(messageTechError, userFullName);
+            LOG.error("Technical error", e);
         } finally {
             finished = true;
         }
@@ -97,7 +151,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private void initProcess() {
         if (finished) {
-            throw new ProcessAlreadyFinished("Процесс уже завершён.");
+            throw new ProcessAlreadyFinished(messageProcessCompleted);
         }
         if (passingPercent > 100)
             passingPercent = 100;
@@ -112,12 +166,12 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String promptUserFullName() throws NeedExitException {
-        processOutput.println("Пожалуйста, представьтесь.");
-        processOutput.print("Ваше имя: ");
+        processOutput.println(introPrompt);
+        processOutput.print(promptName+" ");
         String firstName = promptWithoutValidation();
-        processOutput.print("Ваша фамилия: ");
+        processOutput.print(promptSurname+" ");
         String lastName = promptWithoutValidation();
-        processOutput.print("Ваше отчество: ");
+        processOutput.print(promptMiddle+" ");
         String middleName = promptWithoutValidation();
         processOutput.println();
         return (isEmpty(lastName) ? "" : lastName + " ") + (isEmpty(firstName) ? "" : firstName + " ") + (isEmpty(middleName) ? "" : middleName + " ");
@@ -125,33 +179,33 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private String checkExitInput(String input) throws NeedExitException {
         LOG.trace(">> input [{}]", input);
-        if (!isEmpty(input) && "--exit".equals(input.trim().toLowerCase())) {
-            throw new NeedExitException("Пользователь ввёл --exit");
+        if (!isEmpty(input) && exitInput.equals(input.trim().toLowerCase())) {
+            throw new NeedExitException(String.format(errorUserExit,  exitInput));
         }
         return input;
     }
 
     private void helloMessage() {
         processOutput.println(customHelloMessage);
-        processOutput.println("Для прерывания теста введите --exit вместо любого ответа.");
+        processOutput.println(String.format(exitPromptMessage, exitInput));
     }
 
     private void greetingMessage(String fullName) {
-        processOutput.println(String.format("Добро пожаловать%s! ", (isEmpty(fullName) ? "" : ", " + fullName)));
+        processOutput.println(String.format(greetingMessage, (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
         if (isEmpty(resultMessage)) {
-            processOutput.println("Тест не пойден.");
+            processOutput.println(testFailedMessage);
         } else {
             processOutput.println(resultMessage);
         }
-        processOutput.println(String.format("До свидания%s!\n", (isEmpty(fullName) ? "" : ", " + fullName)));
+        processOutput.println(String.format(goodbyeMessage+"\n", (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
-        processOutput.println(String.format("Вопрос %d: %s", questionsCount + 1, question.getText()));
+        processOutput.println(String.format(questionTemplate, questionsCount + 1, question.getText()));
         String answer;
         switch (question.getType()) {
             case CLOSE_ENDED:
@@ -160,7 +214,7 @@ public class ConsoleExamProcess implements ExamProcess {
             case OPEN_ENDED:
                 break;
             default:
-                throw new IllegalArgumentException("Тип вопроса не определён.");
+                throw new IllegalArgumentException(errorUndefinedQuestion);
         }
         processOutput.print("Ответ: ");
         answer = promptWithValidation(question);
