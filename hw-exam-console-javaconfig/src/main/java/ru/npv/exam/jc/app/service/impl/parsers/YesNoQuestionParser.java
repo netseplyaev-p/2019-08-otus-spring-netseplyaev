@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, String> {
-    private final Logger LOG = LoggerFactory.getLogger(YesNoQuestionParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(YesNoQuestionParser.class);
     private final Map<String, String> defaultMapping;
 
     public YesNoQuestionParser(@Value("${parts.separator}") String separator) {

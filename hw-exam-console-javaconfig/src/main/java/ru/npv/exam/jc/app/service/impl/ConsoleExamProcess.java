@@ -77,6 +77,8 @@ public class ConsoleExamProcess implements ExamProcess {
     private String attemptsMessage;
     @Value("${message.answer.title}")
     private String answerTitle;
+    @Value("message.question.skipped")
+    private String questionSkipped;
     @Value("${error.questions.ends}")
     private String errorQuestionsEnds;
     @Value("${result.fail}")
@@ -240,6 +242,7 @@ public class ConsoleExamProcess implements ExamProcess {
                 processOutput.print(answerTitle+" ");
             }
         }
+        processOutput.println(questionSkipped);
         return null;
     }
 

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Service
 public class CheckAnswerServiceImpl implements CheckAnswerService {
-    private final Logger LOG = LoggerFactory.getLogger(CheckAnswerServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CheckAnswerServiceImpl.class);
 
     private final Map<QuestionType, QuestionChecker> checkers;
 
@@ -22,7 +22,7 @@ public class CheckAnswerServiceImpl implements CheckAnswerService {
         LOG.debug("Загрузка checkers:");
         checkers = new HashMap<>();
         for (QuestionChecker ch: questionCheckers) {
-            LOG.debug("Для {} - {}", ch.getQuestionType(), ch.getClass().getName());
+            LOG.debug("Загружен checker для {}, класс {}", ch.getQuestionType(), ch.getClass().getName());
             checkers.put(ch.getQuestionType(), ch);
         }
     }

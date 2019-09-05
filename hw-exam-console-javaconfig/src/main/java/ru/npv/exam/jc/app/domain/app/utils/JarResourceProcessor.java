@@ -7,7 +7,7 @@ import java.io.*;
 import java.net.URL;
 
 public class JarResourceProcessor {
-    private final Logger LOG = LoggerFactory.getLogger(JarResourceProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JarResourceProcessor.class);
 
     private final ThrowingConsumer<Reader, Exception> action;
     private final String resourcePath;

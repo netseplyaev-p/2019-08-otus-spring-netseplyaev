@@ -18,7 +18,7 @@ import java.util.*;
 
 @Service
 public class LoadQuestionByCsvFileService implements LoadQuestionsService {
-    private final Logger LOG = LoggerFactory.getLogger(LoadQuestionByCsvFileService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoadQuestionByCsvFileService.class);
 
     @Getter
     private final String defaultPath;
@@ -33,10 +33,10 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
         this.defaultPath = filePath;
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
-        LOG.debug("Загрузка парсеров");
+        LOG.debug("Загрузка парсеров:");
         parsers.forEach( p -> {
             parsersByQuestionType.put(p.getQuestionType(), p);
-            LOG.debug("Загружен парсер для {}, класс вопроса {}", p.getQuestionType(), p.getQuestionClass().getName());
+            LOG.debug("Загружен парсер для {}, класс {}", p.getQuestionType(), p.getClass().getName());
         });
 
         availableQuestionTypes = new LinkedList<>();

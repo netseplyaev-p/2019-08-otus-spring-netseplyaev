@@ -15,7 +15,7 @@ import java.util.List;
 
 @Component
 public class CloseEndedQuestionParser extends AbstractQuestionParser<CloseEndedQuestion, String> {
-    private final Logger LOG = LoggerFactory.getLogger(CloseEndedQuestionParser.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CloseEndedQuestionParser.class);
 
     public CloseEndedQuestionParser(@Value("${parts.separator}") String separator) {
         super(separator);
