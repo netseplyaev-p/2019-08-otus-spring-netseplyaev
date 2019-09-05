@@ -1,3 +1,4 @@
 rootProject.name = '2019-08-otus-spring-netseplyaev'
 include 'hw-exam-console'
+include 'hw-exam-console-javaconfig'
 
