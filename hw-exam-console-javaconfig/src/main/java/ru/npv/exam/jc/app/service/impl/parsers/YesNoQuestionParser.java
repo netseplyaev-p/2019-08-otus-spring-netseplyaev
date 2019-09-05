@@ -2,6 +2,7 @@ package ru.npv.exam.jc.app.service.impl.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
@@ -16,7 +17,7 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
     private final Logger LOG = LoggerFactory.getLogger(YesNoQuestionParser.class);
     private final Map<String, String> defaultMapping;
 
-    public YesNoQuestionParser(String separator) {
+    public YesNoQuestionParser(@Value("${parts.separator}") String separator) {
         super(separator);
         defaultMapping = new HashMap<>();
         defaultMapping.put("Да", "Y");

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.net.URL;
 
 public class JarResourceProcessor {
     private final Logger LOG = LoggerFactory.getLogger(JarResourceProcessor.class);
@@ -17,8 +18,11 @@ public class JarResourceProcessor {
     }
 
     public void process() {
+        URL classUrl = this.getClass().getResource("");
+        LOG.trace("relative URL: {}", classUrl);
         try(InputStream resourceStream = this.getClass().getResourceAsStream(resourcePath)) {
             if (resourceStream != null) {
+                LOG.trace("Ресурс получен: {}", resourcePath);
                 Reader br = new BufferedReader(new InputStreamReader(resourceStream));
                 action.accept(br);
             } else {

@@ -26,7 +26,7 @@ public class StringPropertiesSinglePathService implements StringPropertiesServic
     }
 
     @Autowired
-    StringPropertiesSinglePathService(@Value("settings.properties") String resourcePath) {
+    StringPropertiesSinglePathService(@Value("/settings.properties") String resourcePath) {
         this();
         this.resourcePath = resourcePath;
         init();

@@ -2,6 +2,7 @@ package ru.npv.exam.jc.app.service.impl.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.OpenEndedQuestion;
@@ -16,7 +17,7 @@ import java.util.List;
 public class OpenEndedQuestionParser extends AbstractQuestionParser<OpenEndedQuestion, String> {
     private final Logger LOG = LoggerFactory.getLogger(OpenEndedQuestionParser.class);
 
-    public OpenEndedQuestionParser(String separator) {
+    public OpenEndedQuestionParser(@Value("${parts.separator}") String separator) {
         super(separator);
     }
 
