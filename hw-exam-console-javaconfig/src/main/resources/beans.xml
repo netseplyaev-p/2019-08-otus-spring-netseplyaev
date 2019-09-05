@@ -8,16 +8,16 @@
         <constructor-arg name="original" value=","/>
     </bean>
 
-    <bean id="questionService" class="LoadQuestionByCsvFileService">
+    <bean id="questionService" class="ru.npv.exam.jc.app.service.impl.LoadQuestionByCsvFileService">
         <constructor-arg name="parsers">
             <list>
-                <bean class="CloseEndedQuestionParser">
+                <bean class="ru.npv.exam.jc.app.service.impl.parsers.CloseEndedQuestionParser">
                     <constructor-arg name="separator" ref="separator"/>
                 </bean>
-                <bean class="OpenEndedQuestionParser">
+                <bean class="ru.npv.exam.jc.app.service.impl.parsers.OpenEndedQuestionParser">
                     <constructor-arg name="separator" ref="separator"/>
                 </bean>
-                <bean class="YesNoQuestionParser">
+                <bean class="ru.npv.exam.jc.app.service.impl.parsers.YesNoQuestionParser">
                     <constructor-arg name="separator" ref="separator"/>
                 </bean>
             </list>
@@ -26,21 +26,21 @@
         <property name="filePath" value="/answers.csv"/>
     </bean>
 
-    <bean id="settingsService" class="StringPropertiesSinglePathService">
+    <bean id="settingsService" class="ru.npv.exam.jc.app.service.impl.StringPropertiesSinglePathService">
         <constructor-arg name="resourcePath" value="/settings.properties"/>
     </bean>
 
-    <bean id="checkingService" class="CheckAnswerServiceImpl">
+    <bean id="checkingService" class="ru.npv.exam.jc.app.service.impl.CheckAnswerServiceImpl">
         <constructor-arg name="questionCheckers">
             <list>
-                <bean class="CloseEndedQuestionChecker"/>
-                <bean class="OpenEndedQuestionChecker"/>
-                <bean class="YesNoQuestionChecker"/>
+                <bean class="ru.npv.exam.jc.app.service.impl.checkers.CloseEndedQuestionChecker"/>
+                <bean class="ru.npv.exam.jc.app.service.impl.checkers.OpenEndedQuestionChecker"/>
+                <bean class="ru.npv.exam.jc.app.service.impl.checkers.YesNoQuestionChecker"/>
             </list>
         </constructor-arg>
     </bean>
 
-    <bean id="requestService" class="SingleUserConsoleRequestService">
+    <bean id="requestService" class="ru.npv.exam.jc.app.service.impl.SingleUserConsoleRequestService">
         <constructor-arg name="propertiesService" ref="settingsService"/>
         <constructor-arg name="questionsService" ref="questionService"/>
         <constructor-arg name="checkAnswerService" ref="checkingService"/>
