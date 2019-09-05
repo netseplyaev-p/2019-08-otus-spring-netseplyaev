@@ -2,6 +2,7 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
@@ -23,13 +24,22 @@ public class ConsoleExamProcess implements ExamProcess {
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
     private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
-    private Integer maxQuestionsCount;
+
+    @Value("${max.questions}")
+    private Integer maxQuestionsCount = 6;
+
+    @Value("${begin.message}")
     private String customHelloMessage;
+    @Value("${result.message}")
     private String customResultMessage;
-    private String trueMessage;
-    private String falseMessage;
-    private Boolean needResults;
-    private Integer passingPercent;
+    @Value("${check.answer.true}")
+    private String trueMessage = "Верно";
+    @Value("${check.answer.false}")
+    private String falseMessage = "Неверно";
+    @Value("${all.check.results}")
+    private Boolean needResults = false;
+    @Value("${result.passing.percent}")
+    private Integer passingPercent = 85;
 
     private Scanner processInput;
     private PrintStream processOutput;
@@ -60,7 +70,7 @@ public class ConsoleExamProcess implements ExamProcess {
         try {
             userFullName = promptUserFullName();
             greetingMessage(userFullName);
-            for (questionsCount=0; questionsCount < maxQuestionsCount; questionsCount++) {
+            for (questionsCount = 0; questionsCount < maxQuestionsCount; questionsCount++) {
                 boolean checkResult = askQuestion(questionsCount);
                 rightAnswers += checkResult ? 1 : 0;
                 if (needResults && checkResult) {
@@ -78,8 +88,7 @@ public class ConsoleExamProcess implements ExamProcess {
         } catch (QuestionsOverException e) {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
             LOG.debug("", e);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             sayGoodbye("В процессе выполнения произошла ошибка.", userFullName);
             LOG.error("Ошибка выплонения", e);
         } finally {
@@ -91,28 +100,10 @@ public class ConsoleExamProcess implements ExamProcess {
         if (finished) {
             throw new ProcessAlreadyFinished("Процесс уже завершён.");
         }
-        maxQuestionsCount = 6;
-        try {
-            maxQuestionsCount = Integer.valueOf(parameters.get(Constants.PROPERTY_MAX_QUESTIONS));
-        } catch (Exception e) {}
-        needResults = false;
-        try {
-            needResults = Boolean.valueOf(parameters.get(Constants.PROPERTY_ALL_CHECK_RESULTS));
-        } catch (Exception e) {}
-        passingPercent = 70;
-        try {
-            passingPercent = Integer.valueOf(parameters.get(Constants.PROPERTY_PASSING_PERCENT));
-            if (passingPercent > 100)
-                passingPercent = 100;
-            if (passingPercent < 1)
-                passingPercent = 1;
-        } catch (Exception e) {}
-        customHelloMessage = parameters.get(Constants.PROPERTY_BEGIN_MESSAGE);
-        customResultMessage = parameters.get(Constants.PROPERTY_RESULT_MESSAGE);
-
-        trueMessage = parameters.get(Constants.PROPERTY_CHECK_TRUE);
-        falseMessage = parameters.get(Constants.PROPERTY_CHECK_FALSE);
-
+        if (passingPercent > 100)
+            passingPercent = 100;
+        if (passingPercent < 1)
+            passingPercent = 1;
         processInput = new Scanner(new InputStreamReader(consoleInput));
         if (consoleOutput instanceof PrintStream) {
             processOutput = (PrintStream) consoleOutput;
@@ -147,7 +138,7 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private void greetingMessage(String fullName) {
-        processOutput.println("Добро пожаловать" + (isEmpty(fullName) ? "" : ", "+fullName) + "! ");
+        processOutput.println("Добро пожаловать" + (isEmpty(fullName) ? "" : ", " + fullName) + "! ");
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
@@ -161,7 +152,7 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
-        processOutput.println(String.format("Вопрос %d: %s", questionsCount+1, question.getText()));
+        processOutput.println(String.format("Вопрос %d: %s", questionsCount + 1, question.getText()));
         String answer;
         switch (question.getType()) {
             case CLOSE_ENDED:
@@ -183,8 +174,8 @@ public class ConsoleExamProcess implements ExamProcess {
         if (variants.isEmpty()) {
             return;
         }
-        for (int i=1; i <= variants.size(); i++) {
-            processOutput.println(String.format("%d. %s", i, variants.get(i-1)));
+        for (int i = 1; i <= variants.size(); i++) {
+            processOutput.println(String.format("%d. %s", i, variants.get(i - 1)));
         }
     }
 
@@ -202,7 +193,7 @@ public class ConsoleExamProcess implements ExamProcess {
             if (QuestionInputValidator.validate(question, input)) {
                 return input;
             } else {
-                processOutput.println("Введено некорректное значение. Осталось попыток: "+i);
+                processOutput.println("Введено некорректное значение. Осталось попыток: " + i);
                 processOutput.print("Ответ: ");
             }
         }
@@ -220,7 +211,7 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String getResultMessage(int count, int rightAnswers) {
-        int percent = (int)((double) rightAnswers / (double) count * 100);
+        int percent = (int) ((double) rightAnswers / (double) count * 100);
         LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
         String result = percent >= passingPercent ? "пройден" : "не пройден";
         if (!isEmpty(customResultMessage)) {
