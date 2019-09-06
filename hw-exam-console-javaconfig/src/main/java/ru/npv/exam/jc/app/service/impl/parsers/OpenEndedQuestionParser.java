@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.OpenEndedQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
+import ru.npv.exam.jc.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -43,7 +43,7 @@ public class OpenEndedQuestionParser extends AbstractQuestionParser<OpenEndedQue
             rightVariants.add(QuestionUtils.splitCommas(rightVariant));
         }
         OpenEndedQuestion question = new OpenEndedQuestion(QuestionUtils.splitCommas(parts[1]), rightVariants);
-        LOG.trace("Попался открытый вопрос. На выходе - {}", question);
+        LOG.trace("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - {}", question);
         return question;
     }
 }

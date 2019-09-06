@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.model.YesNoQuestion;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
+import ru.npv.exam.jc.app.service.utils.QuestionUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +20,8 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
     public YesNoQuestionParser(@Value("${parts.separator}") String separator) {
         super(separator);
         defaultMapping = new HashMap<>();
-        defaultMapping.put("Да", "Y");
-        defaultMapping.put("Нет", "N");
+        defaultMapping.put("пїЅпїЅ", "Y");
+        defaultMapping.put("пїЅпїЅпїЅ", "N");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
         }
         String[] parts = input.split(getSeparator());
         YesNoQuestion question = new YesNoQuestion(QuestionUtils.splitCommas(parts[2]), defaultMapping, parts[1].trim());
-        LOG.trace("Попался вопрос Да/Нет. На выходе - {}", question);
+        LOG.trace("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ/пїЅпїЅпїЅ. пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - {}", question);
         return question;
     }
 }

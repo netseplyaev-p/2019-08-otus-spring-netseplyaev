@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import ru.npv.exam.jc.app.domain.model.CloseEndedQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
+import ru.npv.exam.jc.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -42,7 +42,7 @@ public class CloseEndedQuestionParser extends AbstractQuestionParser<CloseEndedQ
             variants.add(QuestionUtils.splitCommas(variant));
         }
         CloseEndedQuestion question = new CloseEndedQuestion(QuestionUtils.splitCommas(parts[2]), parts[1].trim(), variants);
-        LOG.trace("Попался закрытый вопрос. На выходе - {}", question);
+        LOG.trace("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ - {}", question);
         return question;
     }
 }

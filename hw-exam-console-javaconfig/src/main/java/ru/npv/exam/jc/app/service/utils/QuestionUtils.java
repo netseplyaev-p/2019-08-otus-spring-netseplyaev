@@ -1,4 +1,4 @@
-package ru.npv.exam.jc.app.domain.app.utils;
+package ru.npv.exam.jc.app.service.utils;
 
 import org.springframework.util.CollectionUtils;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
@@ -24,18 +24,18 @@ public class QuestionUtils {
             return "null";
         }
         StringBuilder sb = new StringBuilder(question.getType().getDefaultName())
-                .append(" вопрос: [")
+                .append(" пїЅпїЅпїЅпїЅпїЅпїЅ: [")
                 .append(question.getText())
                 .append("]");
         List<String> vars = question.getVariants();
         List<String> answs = question.getRightAnswers();
         if (CollectionUtils.isEmpty(vars)) {
-            sb.append("[Нет вариантов]");
+            sb.append("[пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ]");
         } else {
             if (QuestionType.YES_NO.equals(question.getType())) {
-                sb.append(" Варианты[Да, Нет]");
+                sb.append(" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ[пїЅпїЅ, пїЅпїЅпїЅ]");
             } else {
-                sb.append(" Варианты[");
+                sb.append(" пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ[");
                 for (int i = 0; i < vars.size(); i++) {
                     if (i > 0) {
                         sb.append(", ");
@@ -45,7 +45,7 @@ public class QuestionUtils {
                 sb.append("]");
             }
         }
-        sb.append(" Верный ответ:");
+        sb.append(" пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ:");
         for (String answ: answs) {
             sb.append(" [").append(answ).append("]");
         }

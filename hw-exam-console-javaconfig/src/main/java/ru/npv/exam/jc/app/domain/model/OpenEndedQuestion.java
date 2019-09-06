@@ -1,7 +1,7 @@
 package ru.npv.exam.jc.app.domain.model;
 
 import lombok.EqualsAndHashCode;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
+import ru.npv.exam.jc.app.service.utils.QuestionUtils;
 
 import java.util.Collections;
 import java.util.List;

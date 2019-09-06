@@ -2,7 +2,7 @@ package ru.npv.exam.jc.app.service.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.npv.exam.jc.app.domain.app.utils.ThrowingConsumer;
+import ru.npv.exam.jc.app.domain.app.ThrowingConsumer;
 
 import java.io.*;
 import java.net.URL;
@@ -23,16 +23,16 @@ public class JarResourceProcessor {
         LOG.trace("relative URL: {}", classUrl);
         try(InputStream resourceStream = this.getClass().getResourceAsStream(resourcePath)) {
             if (resourceStream != null) {
-                LOG.trace("Ресурс получен: {}", resourcePath);
+                LOG.trace("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: {}", resourcePath);
                 Reader br = new BufferedReader(new InputStreamReader(resourceStream));
                 action.accept(br);
             } else {
-                LOG.error("Ресурс "+resourcePath+" не найден в Jar");
+                LOG.error("пїЅпїЅпїЅпїЅпїЅпїЅ "+resourcePath+" пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ Jar");
             }
         } catch (IOException e) {
-            LOG.error("Ошибка чтения ресурса: "+resourcePath, e);
+            LOG.error("пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: "+resourcePath, e);
         } catch (Exception e) {
-            LOG.error("Неизвестная ошибка", e);
+            LOG.error("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ", e);
         }
     }
 }

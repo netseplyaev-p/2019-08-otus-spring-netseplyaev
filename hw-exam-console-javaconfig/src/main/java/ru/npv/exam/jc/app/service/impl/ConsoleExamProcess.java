@@ -7,7 +7,7 @@ import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
 import ru.npv.exam.jc.app.domain.app.ExamProcess;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionInputValidator;
+import ru.npv.exam.jc.app.service.utils.QuestionInputValidator;
 
 import java.io.*;
 import java.util.*;
@@ -22,7 +22,7 @@ public class ConsoleExamProcess implements ExamProcess {
     private final OutputStream consoleOutput;
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
-    private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
+    private final int MAX_ATTEMPTS = 5;     // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     private final int passingPercent;
     private final ExamConfig config;
 

@@ -2,7 +2,7 @@ package ru.npv.exam.jc.app.domain.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import ru.npv.exam.jc.app.domain.app.utils.QuestionUtils;
+import ru.npv.exam.jc.app.service.utils.QuestionUtils;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -12,7 +12,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class YesNoQuestion extends AbstractQuestion {
     @Getter
-    private Map<String, String> variantsMapping;    // Да - Y, Нет - N
+    private Map<String, String> variantsMapping;    // пїЅпїЅ - Y, пїЅпїЅпїЅ - N
     private final String rightVariant;
 
     public YesNoQuestion(String text, Map<String, String> variantsMapping, String rightVariant) {
