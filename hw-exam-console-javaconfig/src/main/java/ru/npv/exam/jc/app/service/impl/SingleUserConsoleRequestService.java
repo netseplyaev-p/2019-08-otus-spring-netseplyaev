@@ -2,9 +2,9 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Service;
 import ru.npv.exam.jc.app.domain.app.*;
+import ru.npv.exam.jc.app.service.impl.config.ExamConfig;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,18 +16,17 @@ public class SingleUserConsoleRequestService implements UserRequestService<Input
 
     private final LoadQuestionsService questionsService;
     private final CheckAnswerService checkAnswerService;
-    private final AutowireCapableBeanFactory autowireCapableBeanFactory;
+    private final ExamConfig examConfig;
 
-    public SingleUserConsoleRequestService(LoadQuestionsService questionsService, CheckAnswerService checkAnswerService, AutowireCapableBeanFactory autowireCapableBeanFactory) {
+    public SingleUserConsoleRequestService(LoadQuestionsService questionsService, CheckAnswerService checkAnswerService, ExamConfig examConfig) {
         this.questionsService = questionsService;
         this.checkAnswerService = checkAnswerService;
-        this.autowireCapableBeanFactory = autowireCapableBeanFactory;
+        this.examConfig = examConfig;
     }
 
     @Override
     public ExamProcess getExamProcess(InputStream input, OutputStream output) {
-        ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, new LinkedList<>(questionsService.load()));
-        autowireCapableBeanFactory.autowireBeanProperties(process, AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, false);
+        ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, examConfig, null, new LinkedList<>(questionsService.load()));
         LOG.debug("Создан процесс {}", process);
         return process;
     }

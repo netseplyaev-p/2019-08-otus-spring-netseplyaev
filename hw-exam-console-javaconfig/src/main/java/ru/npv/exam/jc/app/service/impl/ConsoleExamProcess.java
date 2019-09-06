@@ -2,7 +2,7 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import ru.npv.exam.jc.app.service.impl.config.ExamConfig;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
-import static ru.npv.exam.jc.app.domain.app.utils.Constants.PROPERTY_MAX_QUESTIONS;
 
 public class ConsoleExamProcess implements ExamProcess {
     private static final Logger LOG = LoggerFactory.getLogger(ConsoleExamProcess.class);
@@ -24,80 +23,28 @@ public class ConsoleExamProcess implements ExamProcess {
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
     private final int MAX_ATTEMPTS = 5;     // Попытки валидного ввода
-
-    @Value("${"+PROPERTY_MAX_QUESTIONS+"}")
-    private Integer maxQuestionsCount = 6;
-
-    //TODO: вынести всё в props
-    @Value("${begin.message}")
-    private String customHelloMessage;
-    @Value("${result.message}")
-    private String customResultMessage = "Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.";
-    @Value("${check.answer.true}")
-    private String trueMessage = "Верно";
-    @Value("${check.answer.false}")
-    private String falseMessage = "Неверно";
-    @Value("${all.check.results}")
-    private Boolean needResults = false;
-    @Value("${result.passing.percent}")
-    private Integer passingPercent = 85;
-    @Value("${exit.input}")
-    private String exitInput = "release me";
-    @Value("${message.user.break}")
-    private String messageUserBreak;
-    @Value("${message.tech.error}")
-    private String messageTechError;
-    @Value("${message.process.completed}")
-    private String messageProcessCompleted;
-    @Value("${prompt.introduce}")
-    private String introPrompt;
-    @Value("${prompt.firstname}")
-    private String promptName;
-    @Value("${prompt.middlename}")
-    private String promptMiddle;
-    @Value("${prompt.lastname}")
-    private String promptSurname;
-    @Value("${error.user.exit}")
-    private String errorUserExit;
-    @Value("${prompt.exit.message}")
-    private String exitPromptMessage;
-    @Value("${message.greeting}")
-    private String greetingMessage;
-    @Value("${message.test.failed}")
-    private String testFailedMessage;
-    @Value("${message.goodbye}")
-    private String goodbyeMessage;
-    @Value("${error.undefined.question.type}")
-    private String errorUndefinedQuestion;
-    @Value("${template.question}")
-    private String questionTemplate = "Вопрос %d: %s";
-    @Value("${template.variant}")
-    private String variantTemplate = "%s (%d)";
-    @Value("${message.attempts}")
-    private String attemptsMessage;
-    @Value("${message.answer.title}")
-    private String answerTitle;
-    @Value("message.question.skipped")
-    private String questionSkipped;
-    @Value("${error.questions.ends}")
-    private String errorQuestionsEnds;
-    @Value("${result.fail}")
-    private String resultFail="success";
-    @Value("${result.success}")
-    private String resultSuccess="fail";
+    private final int passingPercent;
+    private final ExamConfig config;
 
     private Scanner processInput;
     private PrintStream processOutput;
     private boolean finished;
-
     private Map<String, String> parameters;
 
-    public ConsoleExamProcess(CheckAnswerService checkAnswerService, InputStream consoleInput, OutputStream consoleOutput, List<AbstractQuestion> questionsSet) {
+    public ConsoleExamProcess(CheckAnswerService checkAnswerService, InputStream consoleInput, OutputStream consoleOutput, ExamConfig examConfig, ExamProcess preProcess, List<AbstractQuestion> questionsSet) {
         this.checkAnswerService = checkAnswerService;
         this.consoleInput = consoleInput;
         this.consoleOutput = consoleOutput;
         this.questionsSet = questionsSet;
-        finished = false;
+        this.config = examConfig;
+        this.finished = false;
+        if (config.getPassingPercent() > 100) {
+            this.passingPercent = 100;
+        } else if (config.getPassingPercent() < 1) {
+            this.passingPercent = 1;
+        } else {
+            this.passingPercent = config.getPassingPercent();
+        }
     }
 
     @Override
@@ -115,26 +62,26 @@ public class ConsoleExamProcess implements ExamProcess {
         try {
             userFullName = promptUserFullName();
             greetingMessage(userFullName);
-            for (questionsCount = 0; questionsCount < maxQuestionsCount; questionsCount++) {
+            for (questionsCount = 0; questionsCount < config.getMaxQuestionsCount(); questionsCount++) {
                 boolean checkResult = askQuestion(questionsCount);
                 rightAnswers += checkResult ? 1 : 0;
-                if (needResults && checkResult) {
-                    processOutput.println(trueMessage);
+                if (config.getNeedResults() && checkResult) {
+                    processOutput.println(config.getTrueMessage());
                 }
-                if (needResults && !checkResult) {
-                    processOutput.println(falseMessage);
+                if (config.getNeedResults() && !checkResult) {
+                    processOutput.println(config.getFalseMessage());
                 }
                 processOutput.println();
             }
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
         } catch (NeedExitException e) {
-            sayGoodbye(messageUserBreak, userFullName);
+            sayGoodbye(config.getMessageUserBreak(), userFullName);
             LOG.debug("", e);
         } catch (QuestionsOverException e) {
             sayGoodbye(getResultMessage(questionsCount, rightAnswers), userFullName);
             LOG.debug("", e);
         } catch (Exception e) {
-            sayGoodbye(messageTechError, userFullName);
+            sayGoodbye(config.getMessageTechError(), userFullName);
             LOG.error("Technical error", e);
         } finally {
             finished = true;
@@ -143,12 +90,8 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private void initProcess() {
         if (finished) {
-            throw new ProcessAlreadyFinished(messageProcessCompleted);
+            throw new ProcessAlreadyFinished(config.getMessageProcessCompleted());
         }
-        if (passingPercent > 100)
-            passingPercent = 100;
-        if (passingPercent < 1)
-            passingPercent = 1;
         processInput = new Scanner(new InputStreamReader(consoleInput));
         if (consoleOutput instanceof PrintStream) {
             processOutput = (PrintStream) consoleOutput;
@@ -158,12 +101,12 @@ public class ConsoleExamProcess implements ExamProcess {
     }
 
     private String promptUserFullName() throws NeedExitException {
-        processOutput.println(introPrompt);
-        processOutput.print(promptName+" ");
+        processOutput.println(config.getIntroPrompt());
+        processOutput.print(config.getPromptName()+" ");
         String firstName = promptWithoutValidation();
-        processOutput.print(promptSurname+" ");
+        processOutput.print(config.getPromptSurname()+" ");
         String lastName = promptWithoutValidation();
-        processOutput.print(promptMiddle+" ");
+        processOutput.print(config.getPromptMiddle()+" ");
         String middleName = promptWithoutValidation();
         processOutput.println();
         return (isEmpty(lastName) ? "" : lastName + " ") + (isEmpty(firstName) ? "" : firstName + " ") + (isEmpty(middleName) ? "" : middleName + " ");
@@ -171,33 +114,33 @@ public class ConsoleExamProcess implements ExamProcess {
 
     private String checkExitInput(String input) throws NeedExitException {
         LOG.trace(">> input [{}]", input);
-        if (!isEmpty(input) && exitInput.equals(input.trim().toLowerCase())) {
-            throw new NeedExitException(String.format(errorUserExit,  exitInput));
+        if (!isEmpty(input) && config.getExitInput().equals(input.trim().toLowerCase())) {
+            throw new NeedExitException(String.format(config.getErrorUserExit(), config.getExitInput()));
         }
         return input;
     }
 
     private void helloMessage() {
-        processOutput.println(customHelloMessage);
-        processOutput.println(String.format(exitPromptMessage, exitInput));
+        processOutput.println(config.getCustomHelloMessage());
+        processOutput.println(String.format(config.getExitPromptMessage(), config.getExitInput()));
     }
 
     private void greetingMessage(String fullName) {
-        processOutput.println(String.format(greetingMessage, (isEmpty(fullName) ? "" : ", " + fullName)));
+        processOutput.println(String.format(config.getGreetingMessage(), (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private void sayGoodbye(String resultMessage, String fullName) {
         if (isEmpty(resultMessage)) {
-            processOutput.println(testFailedMessage);
+            processOutput.println(config.getTestFailedMessage());
         } else {
             processOutput.println(resultMessage);
         }
-        processOutput.println(String.format(goodbyeMessage+"\n", (isEmpty(fullName) ? "" : ", " + fullName)));
+        processOutput.println(String.format(config.getGoodbyeMessage()+"\n", (isEmpty(fullName) ? "" : ", " + fullName)));
     }
 
     private boolean askQuestion(int questionsCount) throws NeedExitException, QuestionsOverException {
         AbstractQuestion question = nextQuestion();
-        processOutput.println(String.format(questionTemplate, questionsCount + 1, question.getText()));
+        processOutput.println(String.format(config.getQuestionTemplate(), questionsCount + 1, question.getText()));
         String answer;
         switch (question.getType()) {
             case CLOSE_ENDED:
@@ -206,9 +149,9 @@ public class ConsoleExamProcess implements ExamProcess {
             case OPEN_ENDED:
                 break;
             default:
-                throw new IllegalArgumentException(errorUndefinedQuestion);
+                throw new IllegalArgumentException(config.getErrorUndefinedQuestion());
         }
-        processOutput.print(answerTitle+" ");
+        processOutput.print(config.getAnswerTitle()+" ");
         answer = promptWithValidation(question);
         LOG.trace("Question:{} Type:{} Answer:{}", question.getText(), question.getType(), answer);
         return !isEmpty(answer) && checkAnswerService.check(question, answer);
@@ -220,7 +163,7 @@ public class ConsoleExamProcess implements ExamProcess {
             return;
         }
         for (int i = 1; i <= variants.size(); i++) {
-            processOutput.println(String.format(variantTemplate, i, variants.get(i - 1)));
+            processOutput.println(String.format(config.getVariantTemplate(), i, variants.get(i - 1)));
         }
     }
 
@@ -238,17 +181,17 @@ public class ConsoleExamProcess implements ExamProcess {
             if (QuestionInputValidator.validate(question, input)) {
                 return input;
             } else {
-                processOutput.println(String.format(attemptsMessage, i));
-                processOutput.print(answerTitle+" ");
+                processOutput.println(String.format(config.getAttemptsMessage(), i));
+                processOutput.print(config.getAnswerTitle()+" ");
             }
         }
-        processOutput.println(questionSkipped);
+        processOutput.println(config.getQuestionSkipped());
         return null;
     }
 
     private AbstractQuestion nextQuestion() throws QuestionsOverException {
         if (questionsSet.isEmpty()) {
-            throw new QuestionsOverException(errorQuestionsEnds);
+            throw new QuestionsOverException(config.getErrorQuestionsEnds());
         }
         int nextIndex = random.nextInt(questionsSet.size());
         AbstractQuestion question = questionsSet.get(nextIndex);
@@ -259,8 +202,8 @@ public class ConsoleExamProcess implements ExamProcess {
     private String getResultMessage(int count, int rightAnswers) {
         int percent = (int) ((double) rightAnswers / (double) count * 100);
         LOG.trace("rigths: {}, count: {}, passing %: {}, persent: {}", rightAnswers, count, passingPercent, percent);
-        String result = percent >= passingPercent ? resultSuccess : resultFail;
-        return String.format(customResultMessage, count, rightAnswers, percent, result);
+        String result = percent >= passingPercent ? config.getResultSuccess() : config.getResultFail();
+        return String.format(config.getCustomResultMessage(), count, rightAnswers, percent, result);
     }
 
     class NeedExitException extends Exception {
