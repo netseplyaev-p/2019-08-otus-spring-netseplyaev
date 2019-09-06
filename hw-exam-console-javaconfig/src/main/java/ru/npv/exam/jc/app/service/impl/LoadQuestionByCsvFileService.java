@@ -10,7 +10,7 @@ import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.model.QuestionType;
 import ru.npv.exam.jc.app.domain.app.LoadQuestionsService;
 import ru.npv.exam.jc.app.domain.app.QuestionParser;
-import ru.npv.exam.jc.app.domain.app.utils.JarResourceProcessor;
+import ru.npv.exam.jc.app.service.utils.JarResourceProcessor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

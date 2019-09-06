@@ -2,7 +2,7 @@ package ru.npv.exam.jc.app.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.npv.exam.jc.app.service.impl.config.ExamConfig;
+import ru.npv.exam.jc.app.service.utils.config.ExamConfig;
 import ru.npv.exam.jc.app.domain.model.AbstractQuestion;
 import ru.npv.exam.jc.app.domain.app.exception.ProcessAlreadyFinished;
 import ru.npv.exam.jc.app.domain.app.CheckAnswerService;
