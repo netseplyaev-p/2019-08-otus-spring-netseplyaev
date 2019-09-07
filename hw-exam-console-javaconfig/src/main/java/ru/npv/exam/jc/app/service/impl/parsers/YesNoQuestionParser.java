@@ -20,8 +20,8 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
     public YesNoQuestionParser(@Value("${parts.separator}") String separator) {
         super(separator);
         defaultMapping = new HashMap<>();
-        defaultMapping.put("��", "Y");
-        defaultMapping.put("���", "N");
+        defaultMapping.put("Да", "Y");
+        defaultMapping.put("Нет", "N");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class YesNoQuestionParser extends AbstractQuestionParser<YesNoQuestion, S
         }
         String[] parts = input.split(getSeparator());
         YesNoQuestion question = new YesNoQuestion(QuestionUtils.splitCommas(parts[2]), defaultMapping, parts[1].trim());
-        LOG.trace("������� ������ ��/���. �� ������ - {}", question);
+        LOG.trace("Попался вопрос Да/Нет. На выходе - {}", question);
         return question;
     }
 }

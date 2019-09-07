@@ -42,7 +42,7 @@ public class CloseEndedQuestionParser extends AbstractQuestionParser<CloseEndedQ
             variants.add(QuestionUtils.splitCommas(variant));
         }
         CloseEndedQuestion question = new CloseEndedQuestion(QuestionUtils.splitCommas(parts[2]), parts[1].trim(), variants);
-        LOG.trace("������� �������� ������. �� ������ - {}", question);
+        LOG.trace("Попался закрытый вопрос. На выходе - {}", question);
         return question;
     }
 }

@@ -27,7 +27,7 @@ public class SingleUserConsoleRequestService implements UserRequestService<Input
     @Override
     public ExamProcess getExamProcess(InputStream input, OutputStream output) {
         ExamProcess process = new ConsoleExamProcess(checkAnswerService, input, output, examConfig, null, new LinkedList<>(questionsService.load()));
-        LOG.debug("Создан процесс {}", process);
+        LOG.debug("РЎРѕР·РґР°РЅ РїСЂРѕС†РµСЃСЃ {}", process);
         return process;
     }
 }

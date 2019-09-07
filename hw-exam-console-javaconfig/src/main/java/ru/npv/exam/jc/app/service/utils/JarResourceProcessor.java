@@ -23,16 +23,16 @@ public class JarResourceProcessor {
         LOG.trace("relative URL: {}", classUrl);
         try(InputStream resourceStream = this.getClass().getResourceAsStream(resourcePath)) {
             if (resourceStream != null) {
-                LOG.trace("������ �������: {}", resourcePath);
+                LOG.trace("Ресурс загружен: {}", resourcePath);
                 Reader br = new BufferedReader(new InputStreamReader(resourceStream));
                 action.accept(br);
             } else {
-                LOG.error("������ "+resourcePath+" �� ������ � Jar");
+                LOG.error("Ресурс "+resourcePath+" не найден вJar");
             }
         } catch (IOException e) {
-            LOG.error("������ ������ �������: "+resourcePath, e);
+            LOG.error("Ошибка загрузки ресурса: "+resourcePath, e);
         } catch (Exception e) {
-            LOG.error("����������� ������", e);
+            LOG.error("Техническая ошибка", e);
         }
     }
 }

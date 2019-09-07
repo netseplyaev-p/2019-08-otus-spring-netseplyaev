@@ -22,7 +22,7 @@ public class ConsoleExamProcess implements ExamProcess {
     private final OutputStream consoleOutput;
     private final List<AbstractQuestion> questionsSet;
     private final Random random = new Random(System.currentTimeMillis());
-    private final int MAX_ATTEMPTS = 5;     // ������� ��������� �����
+    private final int MAX_ATTEMPTS = 5;     // Количество попыток ввода
     private final int passingPercent;
     private final ExamConfig config;
 

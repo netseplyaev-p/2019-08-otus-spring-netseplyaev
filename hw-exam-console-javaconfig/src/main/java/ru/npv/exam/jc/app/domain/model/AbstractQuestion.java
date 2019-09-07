@@ -13,6 +13,6 @@ public abstract class AbstractQuestion {
     private String text;
 
     public abstract QuestionType getType();
-    public abstract List<String> getVariants(); // Варианты для вывода пользователю
-    public abstract List<String> getRightAnswers(); // Варианты для сравнения
+    public abstract List<String> getVariants(); // Р’Р°СЂРёР°РЅС‚С‹ РґР»СЏ РІС‹РІРѕРґР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ
+    public abstract List<String> getRightAnswers(); // Р’Р°СЂРёР°РЅС‚С‹ РґР»СЏ СЃСЂР°РІРЅРµРЅРёСЏ
 }

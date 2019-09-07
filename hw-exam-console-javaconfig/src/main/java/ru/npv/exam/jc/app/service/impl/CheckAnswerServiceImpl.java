@@ -19,10 +19,10 @@ public class CheckAnswerServiceImpl implements CheckAnswerService {
     private final Map<QuestionType, QuestionChecker> checkers;
 
     public CheckAnswerServiceImpl(List<QuestionChecker> questionCheckers) {
-        LOG.debug("Загрузка checkers:");
+        LOG.debug("Р—Р°РіСЂСѓР·РєР° checkers:");
         checkers = new HashMap<>();
         for (QuestionChecker ch: questionCheckers) {
-            LOG.debug("Загружен checker для {}, класс {}", ch.getQuestionType(), ch.getClass().getName());
+            LOG.debug("Р—Р°РіСЂСѓР¶РµРЅ checker РґР»СЏ {}, РєР»Р°СЃСЃ {}", ch.getQuestionType(), ch.getClass().getName());
             checkers.put(ch.getQuestionType(), ch);
         }
     }
@@ -32,7 +32,7 @@ public class CheckAnswerServiceImpl implements CheckAnswerService {
         if (checkers.containsKey(question.getType())) {
             return checkers.get(question.getType()).check(question, input);
         } else {
-            LOG.debug("Невозможно поверить вопрос {}, отсутствует checker", question.getText());
+            LOG.debug("РќРµРІРѕР·РјРѕР¶РЅРѕ РїРѕРІРµСЂРёС‚СЊ РІРѕРїСЂРѕСЃ {}, РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ checker", question.getText());
             return false;
         }
     }

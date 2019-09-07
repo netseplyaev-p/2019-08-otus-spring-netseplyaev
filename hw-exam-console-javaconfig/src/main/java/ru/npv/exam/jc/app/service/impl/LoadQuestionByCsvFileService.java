@@ -33,10 +33,10 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
         this.defaultPath = filePath;
         this.separator = separator;
         parsersByQuestionType = new HashMap<>();
-        LOG.debug("Загрузка парсеров:");
+        LOG.debug("Р—Р°РіСЂСѓР·РєР° РїР°СЂСЃРµСЂРѕРІ:");
         parsers.forEach( p -> {
             parsersByQuestionType.put(p.getQuestionType(), p);
-            LOG.debug("Загружен парсер для {}, класс {}", p.getQuestionType(), p.getClass().getName());
+            LOG.debug("Р—Р°РіСЂСѓР¶РµРЅ РїР°СЂСЃРµСЂ РґР»СЏ {}, РєР»Р°СЃСЃ {}", p.getQuestionType(), p.getClass().getName());
         });
 
         availableQuestionTypes = new LinkedList<>();
@@ -64,19 +64,19 @@ public class LoadQuestionByCsvFileService implements LoadQuestionsService {
         String line;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
-            if (StringUtils.isEmpty(line) || line.startsWith("#")) {    // Комменты и отступы пропускаем
+            if (StringUtils.isEmpty(line) || line.startsWith("#")) {    // РљРѕРјРјРµРЅС‚С‹ Рё РѕС‚СЃС‚СѓРїС‹ РїСЂРѕРїСѓСЃРєР°РµРј
                 continue;
             }
             String[] splitLine = line.split(separator);
             QuestionType questionType;
             if (splitLine.length > 0 && availableQuestionTypes.contains(splitLine[0].trim())
-                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null   // Только чтоб получить значение
+                    && (questionType = QuestionType.valueOf(splitLine[0].trim())) != null   // РўРѕР»СЊРєРѕ С‡С‚РѕР± РїРѕР»СѓС‡РёС‚СЊ Р·РЅР°С‡РµРЅРёРµ
                     && parsersByQuestionType.containsKey(questionType)) {
-                LOG.debug("Попытка распарсить {}", line);
+                LOG.debug("РџРѕРїС‹С‚РєР° СЂР°СЃРїР°СЂСЃРёС‚СЊ {}", line);
                 AbstractQuestion q = parsersByQuestionType.get(questionType).parse(line);
                 questions.add(q);
             } else {
-                LOG.debug("Нераспознанная строка: {}", line);
+                LOG.debug("РќРµСЂР°СЃРїРѕР·РЅР°РЅРЅР°СЏ СЃС‚СЂРѕРєР°: {}", line);
             }
         }
     }

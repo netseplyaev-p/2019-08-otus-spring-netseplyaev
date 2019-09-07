@@ -19,6 +19,6 @@ public class YesNoQuestionChecker implements QuestionChecker<YesNoQuestion> {
             return false;
         }
         String varText = question.getVariants().get(Integer.valueOf(answer)-1);
-        return question.getRightAnswers().get(0).equals(question.getVariantsMapping().get(varText));     // 1 верный ответ
+        return question.getRightAnswers().get(0).equals(question.getVariantsMapping().get(varText));     // 1 РІРµСЂРЅС‹Р№ РѕС‚РІРµС‚
     }
 }

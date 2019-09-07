@@ -43,7 +43,7 @@ public class OpenEndedQuestionParser extends AbstractQuestionParser<OpenEndedQue
             rightVariants.add(QuestionUtils.splitCommas(rightVariant));
         }
         OpenEndedQuestion question = new OpenEndedQuestion(QuestionUtils.splitCommas(parts[1]), rightVariants);
-        LOG.trace("������� �������� ������. �� ������ - {}", question);
+        LOG.trace("Попался открытый вопрос. На выходе - {}", question);
         return question;
     }
 }

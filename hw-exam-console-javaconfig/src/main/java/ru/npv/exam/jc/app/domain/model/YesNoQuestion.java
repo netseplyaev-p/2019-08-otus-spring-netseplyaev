@@ -12,7 +12,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 public class YesNoQuestion extends AbstractQuestion {
     @Getter
-    private Map<String, String> variantsMapping;    // �� - Y, ��� - N
+    private Map<String, String> variantsMapping;
     private final String rightVariant;
 
     public YesNoQuestion(String text, Map<String, String> variantsMapping, String rightVariant) {

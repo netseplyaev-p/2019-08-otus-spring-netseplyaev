@@ -5,9 +5,9 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum QuestionType {
-    OPEN_ENDED("Открытый"),
-    CLOSE_ENDED("Закрытый"),
-    YES_NO("Да/Нет");
+    OPEN_ENDED("РћС‚РєСЂС‹С‚С‹Р№"),
+    CLOSE_ENDED("Р—Р°РєСЂС‹С‚С‹Р№"),
+    YES_NO("Р”Р°/РќРµС‚");
 
     @Getter
     private String defaultName;

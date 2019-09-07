@@ -16,13 +16,13 @@ public class ExamConfig implements Config {
     private String customHelloMessage;
     @Getter
     @Value("${result.message}")
-    private String customResultMessage = "Вопросов: %d. Верных ответов: %d (%d%%). Тест %s.";
+    private String customResultMessage = "Р’РѕРїСЂРѕСЃРѕРІ: %d. Р’РµСЂРЅС‹С… РѕС‚РІРµС‚РѕРІ: %d (%d%%). РўРµСЃС‚ %s.";
     @Getter
     @Value("${check.answer.true}")
-    private String trueMessage = "Верно";
+    private String trueMessage = "Р’РµСЂРЅРѕ";
     @Getter
     @Value("${check.answer.false}")
-    private String falseMessage = "Неверно";
+    private String falseMessage = "РќРµРІРµСЂРЅРѕ";
     @Getter
     @Value("${all.check.results}")
     private Boolean needResults = false;
@@ -73,7 +73,7 @@ public class ExamConfig implements Config {
     private String errorUndefinedQuestion;
     @Getter
     @Value("${template.question}")
-    private String questionTemplate = "Вопрос %d: %s";
+    private String questionTemplate = "Р’РѕРїСЂРѕСЃ %d: %s";
     @Getter
     @Value("${template.variant}")
     private String variantTemplate = "%s (%d)";
